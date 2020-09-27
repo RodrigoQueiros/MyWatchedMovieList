@@ -1,0 +1,31 @@
+/*----------------------------------------------------------*/
+/* 	0 - Imports												*/
+/*----------------------------------------------------------*/
+@import "./reset/reset.css";
+/* @import '../fonts/AcuminPro.css'; font here */
+@import "./pages/navbar.css";
+@import "./pages/home.css";
+@import "./pages/catalog.css";
+@import "./pages/detailspage.css";
+@import "./pages/footer.css";
+
+/*----------------------------------------------------------*/
+/* 	1 - General											*/
+/*----------------------------------------------------------*/
+
+body {
+  background-color: #e6e6e6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* * { */
+/* font-family: acumin-pro; */
+/* } */
+
+.container {
+  max-width: 1920px;
+  margin: 0 auto;
+}
