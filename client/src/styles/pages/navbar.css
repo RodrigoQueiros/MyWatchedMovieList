@@ -1,0 +1,244 @@
+.navbar {
+  height: 60px;
+  position: relative;
+  overflow: hidden;
+  z-index: 3;
+  position: relative;
+  background-color: #a53030;
+}
+
+.navbar-logo {
+  height: 100%;
+  width: auto;
+  display: block;
+  float: left;
+}
+
+.navbar-logo-a {
+  z-index: 20;
+  position: inherit;
+}
+
+.navbar-menu {
+  float: right;
+  height: 50px;
+  line-height: 50px;
+  white-space: nowrap;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  background-color: #a53030;
+  z-index: 3;
+  position: relative;
+}
+
+.menu-btn:checked ~ .navbar-menu {
+  height: 100vh;
+  opacity: 1;
+}
+
+.menu-btn:checked ~ .navbar-menu .navbar-menu-link {
+  margin-top: 2vh;
+  font-size: 2rem !important;
+  opacity: 1;
+}
+
+.navbar-menu-element {
+  display: inline;
+  margin-left: 50px;
+}
+
+.navbar-menu-link {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.25rem;
+  letter-spacing: 0px;
+  text-align: center;
+  display: block;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-menu-link:hover,
+.navbar .menu-btn:hover {
+  border-radius: 5px;
+}
+
+/* menu icon */
+
+.navbar .menu-icon {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  position: relative;
+  z-index: 20;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.navbar .menu-icon .navicon {
+  background: #636565;
+  border-radius: 10px;
+  display: block;
+  height: 3px;
+  position: relative;
+  -webkit-transition: background 0.2s ease-out;
+  -o-transition: background 0.2s ease-out;
+  transition: background 0.2s ease-out;
+  width: 25px;
+}
+
+.navbar .menu-icon .navicon:before,
+.navbar .menu-icon .navicon:after {
+  background: #636565;
+  content: "";
+  display: block;
+  border-radius: 10px;
+  height: 100%;
+  position: absolute;
+  -webkit-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  width: 100%;
+}
+
+.navbar .menu-icon .navicon:before {
+  top: 7px;
+}
+
+.navbar .menu-icon .navicon:after {
+  top: -7px;
+}
+
+/* menu btn */
+
+.navbar .menu-btn {
+  display: none;
+}
+
+.navbar .menu-btn:checked ~ .menu-icon .navicon {
+  background: transparent;
+}
+
+.navbar .menu-btn:checked ~ .menu-icon .navicon:before {
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.navbar .menu-btn:checked ~ .menu-icon .navicon:after {
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.navbar .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:before,
+.navbar .menu-btn:checked ~ .menu-icon:not(.steps) .navicon:after {
+  top: 0;
+}
+
+@media (min-width: 1300px) {
+  .navbar-menu-element {
+    float: left;
+  }
+
+  .navbar .navbar-menu {
+    clear: none;
+    float: right;
+    max-height: none;
+  }
+
+  .navbar .menu-icon {
+    display: none;
+  }
+}
+
+@media (max-width: 1300px) {
+  .navbar .menu-icon {
+    padding-bottom: 8px;
+    padding-top: 22px;
+  }
+
+  .navbar .menu-icon .navicon {
+    width: 40px;
+  }
+
+  .navbar-menu {
+    position: fixed;
+    background: #a53030;
+    width: 100vw;
+    height: 20px;
+    opacity: 0;
+    padding-top: 100px;
+    -webkit-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .navbar-menu-link {
+    opacity: 0;
+    -webkit-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+  }
+}
+
+@media (max-width: 1000px) {
+  .navbar {
+    margin-top: 40px;
+    height: 40px;
+  }
+
+  .navbar-menu {
+    height: 40px;
+    line-height: 50px;
+  }
+
+  .navbar .menu-icon {
+    padding-top: 15px;
+  }
+}
+
+@media (max-width: 800px) {
+  .navbar {
+    margin-top: 30px;
+    height: 30px;
+  }
+
+  .navbar-menu {
+    height: 30px;
+    line-height: 40px;
+  }
+
+  .navbar .menu-icon {
+    padding-top: 13px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    margin-top: 25px;
+    height: 21px;
+  }
+
+  .navbar-menu {
+    height: 25px;
+    line-height: 25px;
+  }
+
+  .navbar .menu-icon {
+    padding-top: 8px;
+  }
+}
+
+.navbar-menu-link:hover {
+  color: rgba(63, 178, 201, 1);
+  -webkit-transform: translateY(-0.25em);
+  -ms-transform: translateY(-0.25em);
+  transform: translateY(-0.25em);
+}
