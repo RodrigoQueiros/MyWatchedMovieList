@@ -13,17 +13,24 @@
 /* 	1 - General											*/
 /*----------------------------------------------------------*/
 
+/* 
+Main color: #840012
+Secondary colors: #FFB052 #FFE377
+Text: #34344A
+Background: #FAFAFA 
+*/
+
 body {
-  background-color: #e6e6e6;
+  background-color: #fafafa;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* * { */
-/* font-family: acumin-pro; */
-/* } */
+* {
+  font-family: "Poppins", helvetica, sans-serif, arial;
+}
 
 .container {
   max-width: 1920px;
@@ -48,4 +55,8 @@ html {
 
 .disableScroll {
   overflow: hidden;
+}
+
+.color-yellow {
+  color: #ffe377;
 }

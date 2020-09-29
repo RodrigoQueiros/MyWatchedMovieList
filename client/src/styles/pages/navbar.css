@@ -4,11 +4,12 @@
   overflow: hidden;
   z-index: 3;
   position: relative;
-  background-color: #a53030;
+  background-color: #840012;
 }
 
 .navbar-logo {
-  height: 100%;
+  margin-top: 10px;
+  height: 40px;
   width: auto;
   display: block;
   float: left;
@@ -21,15 +22,15 @@
 
 .navbar-menu {
   float: right;
-  height: 50px;
-  line-height: 50px;
+  height: 60px;
+  line-height: 60px;
   white-space: nowrap;
 
   margin: 0;
   padding: 0;
   list-style: none;
   overflow: hidden;
-  background-color: #a53030;
+  background-color: #840012;
   z-index: 3;
   position: relative;
 }
@@ -53,7 +54,7 @@
 .navbar-menu-link {
   text-decoration: none;
   color: #fff;
-  font-size: 1.25rem;
+  font-size: 16px;
   letter-spacing: 0px;
   text-align: center;
   display: block;
@@ -170,7 +171,7 @@
 
   .navbar-menu {
     position: fixed;
-    background: #a53030;
+    background: #840012;
     width: 100vw;
     height: 20px;
     opacity: 0;
@@ -237,7 +238,7 @@
 }
 
 .navbar-menu-link:hover {
-  color: rgba(63, 178, 201, 1);
+  color: #ffb052;
   -webkit-transform: translateY(-0.25em);
   -ms-transform: translateY(-0.25em);
   transform: translateY(-0.25em);

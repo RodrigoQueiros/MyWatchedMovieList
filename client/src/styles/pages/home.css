@@ -1,0 +1,33 @@
+.hero {
+}
+
+.hero-gradient {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-image {
+  display: block;
+}
+
+.hero-gradient:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  background: transparent
+    linear-gradient(
+      to right,
+      #000000 0%,
+      #000000b3 25%,
+      #00000000 70%,
+      #ffffff00 100%
+    )
+    0% 0% no-repeat padding-box;
+}
+.img-gradient img {
+  display: block;
+}

@@ -1,7 +1,9 @@
 <template>
-  <div id="container">
+  <div class="app">
     <Navbar />
-    <img alt="Vue logo" src="./assets/logo.png" />
+    <div class="container">
+      <router-view />
+    </div>
     <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/> -->
   </div>
 </template>
