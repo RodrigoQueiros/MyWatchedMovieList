@@ -1,52 +1,87 @@
 <template>
   <div class="home">
     <!-- Hero Trending -->
-    <div class="hero">
-      <div class="hero-gradient">
-        <img class="hero-wallpaper" src="../assets/mulan-hero.png" alt />
+
+    <div
+      class="hero"
+      v-for="(movie,i) in movieTrending"
+      :key="movie.id"
+      @click="goToMovie(movie.id)"
+      @mouseover="pauseInterval = true"
+      @mouseleave="pauseInterval = false"
+    >
+      <div class="hero-gradient" v-show="movieTrendingShow==i">
+        <img class="hero-wallpaper" :src="movie.src" alt />
       </div>
-      <div class="hero-content" @click="goToMovie(movieTrending.id)">
+
+      <span class="hero-content">
         <h3 class="hero-trending-header">Trending</h3>
-        <div class="flex-container">
-          <img :src="movieTrending.poster_path" alt class="hero-trending-image" />
-          <div class="hero-trending-info">
-            <h2 class="hero-trending-title">{{movieTrending.original_title}}</h2>
-            <p class="hero-trending-text">{{movieTrending.overview}}</p>
+        <transition name="fade" mode="out-in">
+          <div class="flex-container" v-show="movieTrendingShow==i">
+            <img :src="movie.poster_path" alt class="hero-trending-image" />
+            <div class="hero-trending-info">
+              <h2 class="hero-trending-title">{{movie.original_title}}</h2>
+              <p class="hero-trending-text">{{movie.overview}}</p>
+            </div>
+            <div class="hero-trending-more-info">
+              <p class="hero-trending-extra-info">rating: {{movie.vote_average}} / 10</p>
+              <p class="hero-trending-extra-info">duration: {{movie.runtime}}</p>
+            </div>
           </div>
-          <div class="hero-trending-more-info">
-            <p class="hero-trending-extra-info">rating: {{movieTrending.vote_average}} / 10</p>
-            <p class="hero-trending-extra-info">duration: {{movieTrending.runtime}}</p>
+        </transition>
+      </span>
+    </div>
+    <!-- <hooper :settings="hooperHero">
+      <slide class="hero" v-for="movie in movieTrending" :key="movie.id">
+        <div class="hero-gradient">
+          <img class="hero-wallpaper" :src="movie.src" alt />
+        </div>
+        <div class="hero-content" @click="goToMovie(movie.id)">
+          <h3 class="hero-trending-header">Trending</h3>
+          <div class="flex-container">
+            <img :src="movie.poster_path" alt class="hero-trending-image" />
+            <div class="hero-trending-info">
+              <h2 class="hero-trending-title">{{movie.original_title}}</h2>
+              <p class="hero-trending-text">{{movie.overview}}</p>
+            </div>
+            <div class="hero-trending-more-info">
+              <p class="hero-trending-extra-info">rating: {{movie.vote_average}} / 10</p>
+              <p class="hero-trending-extra-info">duration: {{movie.runtime}}</p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </slide>
+    </hooper>-->
 
     <!-- Most popular -->
     <h1>Most popular</h1>
-    <div class="movie-cards">
-      <div
+    <hooper :settings="hooperMovieCard">
+      <slide
         class="movie-card"
         v-for="movie in popularMovies"
         :key="movie.id"
         @click="goToMovie(movie.id)"
       >
         <img class="movie-card-image" :src="movie.poster_path" alt />
-        <h2 class="movie-card-title">{{movie.original_title}}</h2>
-      </div>
-    </div>
+        <h2 class="movie-card-title">{{movie.title}}</h2>
+      </slide>
+      <hooper-navigation slot="hooper-addons"></hooper-navigation>
+    </hooper>
+
     <!-- Top rated -->
     <h1>Top rated</h1>
-    <VueSlickCarousel v-bind="settings" style="display:flex">
-      <div
+    <hooper :settings="hooperMovieCard">
+      <slide
         class="movie-card"
         v-for="movie in popularMovies"
         :key="movie.id"
         @click="goToMovie(movie.id)"
       >
         <img class="movie-card-image" :src="movie.poster_path" alt />
-        <h2 class="movie-card-title">{{movie.original_title}}</h2>
-      </div>
-    </VueSlickCarousel>
+        <h2 class="movie-card-title">{{movie.title}}</h2>
+      </slide>
+      <hooper-navigation slot="hooper-addons"></hooper-navigation>
+    </hooper>
   </div>
 </template>
 
@@ -55,103 +90,108 @@
 import { getMovieDetailsById, getPopularMovies } from "../API/apiMovie";
 //TS
 import { Component, Vue } from "vue-property-decorator";
-//Carousel
-import VueSlickCarousel from "vue-slick-carousel";
+//Hooper (Swiper)
+import { Hooper, Slide, Navigation as HooperNavigation } from "hooper";
+import "hooper/dist/hooper.css";
 
-interface movie {
-  overview: string;
-  original_title: string;
-  poster_path: string;
-  runtime: string;
-  vote_average: number;
-  id: number;
-}
-
-interface carouselSettings {
-  dots: boolean;
-  infinite: boolean;
-  speed: number;
-  slidesToShow: number;
-  slidesToScroll: number;
-  initialSlide: number;
-  responsive: Array<object>;
+interface hooper {
+  itemsToShow: number;
+  itemsToSlide: number;
+  infiniteScroll: boolean;
+  wheelControl: boolean;
+  vertical: boolean;
+  autoPlay: boolean;
+  playSpeed: number;
 }
 
 interface pmovie {
   results: Array<object>;
 }
 
-@Component
+type movieType = {
+  overview: string;
+  title: string;
+  poster_path: string;
+  runtime: string;
+  vote_average: number;
+  id: number;
+  src: string;
+};
+
+@Component({
+  components: {
+    // VueSlickCarousel
+    Hooper,
+    Slide,
+    HooperNavigation
+  }
+})
 export default class Home extends Vue {
-  private movieTrending: movie = {
-    overview: "",
-    original_title: "",
-    poster_path: "",
-    runtime: "",
-    vote_average: 0,
-    id: 0
-  };
+  private pauseInterval: boolean = false;
+  private movieTrendingShow: number = 0;
+  private movieTrending: movieType[] = [];
   private popularMovies: pmovie = {
     results: []
   };
-  private settings: carouselSettings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 4,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+  private hooperMovieCard: hooper = {
+    itemsToShow: 5,
+    itemsToSlide: 5,
+    infiniteScroll: true,
+    wheelControl: false,
+    vertical: false,
+    autoPlay: false,
+    playSpeed: 2000
   };
-  components: {
-    VueSlickCarousel;
+  private hooperHero: hooper = {
+    itemsToShow: 1,
+    itemsToSlide: 1,
+    infiniteScroll: true,
+    wheelControl: true,
+    vertical: false,
+    autoPlay: true,
+    playSpeed: 5000
   };
   created() {
     getMovieDetailsById("337401").then(response => {
-      this.movieTrending = response.data;
-      this.movieTrending.poster_path =
-        "https://image.tmdb.org/t/p/w500" + this.movieTrending.poster_path;
-      if (this.movieTrending.overview.length >= 270) {
-        this.movieTrending.overview =
-          this.movieTrending.overview.substr(0, 270) + "...";
-      }
-      this.movieTrending.runtime = this.movieTrending.runtime + " m";
+      response.data.src =
+        "https://www.denofgeek.com/wp-content/uploads/2020/09/boycott-mulan-hero-image-2.png?fit=2000%2C500&resize=2000%2C500";
+      this.movieTrending.push(response.data);
+
+      getMovieDetailsById("299536").then(response => {
+        response.data.src = "https://image.ibb.co/fvCZ3G/EMH1.jpg";
+        this.movieTrending.push(response.data);
+        for (let i = 0; i < this.movieTrending.length; i++) {
+          this.movieTrending[i].poster_path =
+            "https://image.tmdb.org/t/p/w500" +
+            this.movieTrending[i].poster_path;
+          if (this.movieTrending[i].overview.length >= 270) {
+            this.movieTrending[i].overview =
+              this.movieTrending[i].overview.substr(0, 270) + "...";
+          }
+          this.movieTrending[i].runtime = this.movieTrending[i].runtime + " m";
+          console.log(this.movieTrending);
+        }
+      });
     });
 
     getPopularMovies().then(response => {
-      this.popularMovies = response.data.results.slice(0, 5);
-      for (let i = 0; i < 5; i++) {
+      this.popularMovies = response.data.results.slice(0, 10);
+      for (let i = 0; i < 10; i++) {
         this.popularMovies[i].poster_path =
           "https://image.tmdb.org/t/p/w500" + this.popularMovies[i].poster_path;
       }
       console.log(this.popularMovies);
     });
-    console.log(this.settings);
+
+    setInterval(() => {
+      if (!this.pauseInterval) {
+        if (this.movieTrendingShow >= 1) {
+          this.movieTrendingShow = 0;
+        } else {
+          this.movieTrendingShow += 1;
+        }
+      }
+    }, 10000);
   }
   public goToMovie(movieId): void {
     this.$router.push({ name: "DetailsPage", params: { id: movieId } });

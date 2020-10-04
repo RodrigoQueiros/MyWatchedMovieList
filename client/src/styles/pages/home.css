@@ -4,6 +4,10 @@
   position: relative;
 }
 
+.hero-space {
+  width: 100vw;
+  height: calc(1 / 4 * 100vw);
+}
 .hero-gradient {
   position: relative;
   display: inline-block;
@@ -11,6 +15,8 @@
 
 .hero-wallpaper {
   display: block;
+  height: auto;
+  width: 2000px;
 }
 
 .hero-gradient:after {
@@ -128,4 +134,38 @@
   line-height: 42px;
   font-weight: 600;
   margin-top: 15px;
+}
+
+/* Hooper (Swiper) */
+.hooper {
+  height: auto !important;
+}
+
+/* Hero animation */
+.fade-enter-active {
+  animation: fade-in 1s;
+}
+.fade-leave-active {
+  animation: fade-out 1s;
+}
+
+@keyframes fade-in {
+  0% {
+    transform: translateY(20px);
+    opacity: 0%;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 100%;
+  }
+}
+@keyframes fade-out {
+  0% {
+    transform: translateY(0px);
+    opacity: 100%;
+  }
+  100% {
+    transform: translateY(-20px);
+    opacity: 0%;
+  }
 }
