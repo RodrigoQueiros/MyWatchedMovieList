@@ -16,6 +16,9 @@
           <a class="navbar-menu-link" href="#section3" id="section3ID">Catalog</a>
         </li>
         <li class="navbar-menu-element">
+          <a class="navbar-menu-link" href="#section3" id="section3ID">Categories</a>
+        </li>
+        <li class="navbar-menu-element">
           <a class="navbar-menu-link" href="#section4" id="section4ID">Random Movie</a>
         </li>
         <li class="navbar-menu-element">

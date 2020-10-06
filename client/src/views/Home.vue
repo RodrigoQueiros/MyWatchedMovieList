@@ -6,21 +6,22 @@
       class="hero"
       v-for="(movie,i) in movieTrending"
       :key="movie.id"
+      v-show="movieTrendingShow==i"
       @click="goToMovie(movie.id)"
       @mouseover="pauseInterval = true"
       @mouseleave="pauseInterval = false"
     >
-      <div class="hero-gradient" v-show="movieTrendingShow==i">
+      <div class="hero-gradient">
         <img class="hero-wallpaper" :src="movie.src" alt />
       </div>
 
       <span class="hero-content">
-        <h3 class="hero-trending-header">Trending</h3>
+        <h2 class="hero-trending-header">Trending</h2>
         <transition name="fade" mode="out-in">
           <div class="flex-container" v-show="movieTrendingShow==i">
             <img :src="movie.poster_path" alt class="hero-trending-image" />
             <div class="hero-trending-info">
-              <h2 class="hero-trending-title">{{movie.original_title}}</h2>
+              <h1 class="hero-trending-title">{{movie.original_title}}</h1>
               <p class="hero-trending-text">{{movie.overview}}</p>
             </div>
             <div class="hero-trending-more-info">
@@ -31,67 +32,64 @@
         </transition>
       </span>
     </div>
-    <!-- <hooper :settings="hooperHero">
-      <slide class="hero" v-for="movie in movieTrending" :key="movie.id">
-        <div class="hero-gradient">
-          <img class="hero-wallpaper" :src="movie.src" alt />
-        </div>
-        <div class="hero-content" @click="goToMovie(movie.id)">
-          <h3 class="hero-trending-header">Trending</h3>
-          <div class="flex-container">
-            <img :src="movie.poster_path" alt class="hero-trending-image" />
-            <div class="hero-trending-info">
-              <h2 class="hero-trending-title">{{movie.original_title}}</h2>
-              <p class="hero-trending-text">{{movie.overview}}</p>
+    <div class="movie-cards">
+      <!-- Most popular -->
+      <h3>Most popular</h3>
+      <hooper :settings="hooperMovieCard">
+        <slide class="movie-card" v-for="movie in popularMovies" :key="movie.id">
+          <div @click="goToMovie(movie.id)">
+            <div class="movie-card-info">
+              <img class="movie-card-image" :src="movie.poster_path" alt />
+              <div class="overlay">
+                <p class="text-overlay">rating: {{movie.vote_average}}</p>
+                <p class="text-overlay">{{movie.release_date}}</p>
+              </div>
             </div>
-            <div class="hero-trending-more-info">
-              <p class="hero-trending-extra-info">rating: {{movie.vote_average}} / 10</p>
-              <p class="hero-trending-extra-info">duration: {{movie.runtime}}</p>
-            </div>
+            <h2 class="movie-card-title">{{movie.title}}</h2>
           </div>
-        </div>
-      </slide>
-    </hooper>-->
+        </slide>
+        <hooper-navigation slot="hooper-addons"></hooper-navigation>
+        <hooper-pagination slot="hooper-addons"></hooper-pagination>
+      </hooper>
 
-    <!-- Most popular -->
-    <h1>Most popular</h1>
-    <hooper :settings="hooperMovieCard">
-      <slide
-        class="movie-card"
-        v-for="movie in popularMovies"
-        :key="movie.id"
-        @click="goToMovie(movie.id)"
-      >
-        <img class="movie-card-image" :src="movie.poster_path" alt />
-        <h2 class="movie-card-title">{{movie.title}}</h2>
-      </slide>
-      <hooper-navigation slot="hooper-addons"></hooper-navigation>
-    </hooper>
-
-    <!-- Top rated -->
-    <h1>Top rated</h1>
-    <hooper :settings="hooperMovieCard">
-      <slide
-        class="movie-card"
-        v-for="movie in popularMovies"
-        :key="movie.id"
-        @click="goToMovie(movie.id)"
-      >
-        <img class="movie-card-image" :src="movie.poster_path" alt />
-        <h2 class="movie-card-title">{{movie.title}}</h2>
-      </slide>
-      <hooper-navigation slot="hooper-addons"></hooper-navigation>
-    </hooper>
+      <!-- Top rated -->
+      <h3>Top rated</h3>
+      <hooper :settings="hooperMovieCard">
+        <slide class="movie-card" v-for="movie in topMovies" :key="movie.id">
+          <div @click="goToMovie(movie.id)">
+            <div class="movie-card-info">
+              <img class="movie-card-image" :src="movie.poster_path" alt />
+              <div class="overlay">
+                <p class="text-overlay">rating: {{movie.vote_average}}</p>
+                <p class="text-overlay">{{movie.release_date}}</p>
+              </div>
+            </div>
+            <h2 class="movie-card-title">{{movie.title}}</h2>
+          </div>
+        </slide>
+        <hooper-navigation slot="hooper-addons"></hooper-navigation>
+        <hooper-pagination slot="hooper-addons"></hooper-pagination>
+      </hooper>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 //Axios
-import { getMovieDetailsById, getPopularMovies } from "../API/apiMovie";
+import {
+  getMovieDetailsById,
+  getPopularMovies,
+  getTopMovies
+} from "../API/apiMovie";
 //TS
 import { Component, Vue } from "vue-property-decorator";
 //Hooper (Swiper)
-import { Hooper, Slide, Navigation as HooperNavigation } from "hooper";
+import {
+  Hooper,
+  Slide,
+  Pagination as HooperPagination,
+  Navigation as HooperNavigation
+} from "hooper";
 import "hooper/dist/hooper.css";
 
 interface hooper {
@@ -102,10 +100,7 @@ interface hooper {
   vertical: boolean;
   autoPlay: boolean;
   playSpeed: number;
-}
-
-interface pmovie {
-  results: Array<object>;
+  mouseDrag: boolean;
 }
 
 type movieType = {
@@ -123,6 +118,7 @@ type movieType = {
     // VueSlickCarousel
     Hooper,
     Slide,
+    HooperPagination,
     HooperNavigation
   }
 })
@@ -130,9 +126,8 @@ export default class Home extends Vue {
   private pauseInterval: boolean = false;
   private movieTrendingShow: number = 0;
   private movieTrending: movieType[] = [];
-  private popularMovies: pmovie = {
-    results: []
-  };
+  private popularMovies: movieType[] = [];
+  private topMovies: movieType[] = [];
   private hooperMovieCard: hooper = {
     itemsToShow: 5,
     itemsToSlide: 5,
@@ -140,17 +135,10 @@ export default class Home extends Vue {
     wheelControl: false,
     vertical: false,
     autoPlay: false,
-    playSpeed: 2000
+    playSpeed: 2000,
+    mouseDrag: false
   };
-  private hooperHero: hooper = {
-    itemsToShow: 1,
-    itemsToSlide: 1,
-    infiniteScroll: true,
-    wheelControl: true,
-    vertical: false,
-    autoPlay: true,
-    playSpeed: 5000
-  };
+
   created() {
     getMovieDetailsById("337401").then(response => {
       response.data.src =
@@ -180,7 +168,14 @@ export default class Home extends Vue {
         this.popularMovies[i].poster_path =
           "https://image.tmdb.org/t/p/w500" + this.popularMovies[i].poster_path;
       }
-      console.log(this.popularMovies);
+    });
+
+    getTopMovies().then(response => {
+      this.topMovies = response.data.results.slice(0, 10);
+      for (let i = 0; i < 10; i++) {
+        this.topMovies[i].poster_path =
+          "https://image.tmdb.org/t/p/w500" + this.topMovies[i].poster_path;
+      }
     });
 
     setInterval(() => {
@@ -191,7 +186,7 @@ export default class Home extends Vue {
           this.movieTrendingShow += 1;
         }
       }
-    }, 10000);
+    }, 5000);
   }
   public goToMovie(movieId): void {
     this.$router.push({ name: "DetailsPage", params: { id: movieId } });
