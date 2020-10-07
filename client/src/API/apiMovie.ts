@@ -47,6 +47,16 @@ export function getRecommendedMovieById(body: string) {
   );
 }
 
+export function getRandomMovie(body: string) {
+  return get(
+    "/movie/popular" +
+      "?api_key=" +
+      process.env.VUE_APP_API_KEY +
+      "&language=en-US&page=" +
+      body
+  );
+}
+
 export function editSensor(body: string, id: string) {
   return put("/sensors/" + id, body);
 }

@@ -43,7 +43,7 @@ const routes: RouteConfig[] = [
     component: WatchList
   },
   {
-    path: "/catalog/random",
+    path: "/random",
     name: "RandomMovie",
     component: RandomMovie
   },
