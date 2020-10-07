@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <Navbar />
-    <div class="container">
+    <div class="container margin-top">
       <router-view />
     </div>
     <Footer />
@@ -19,7 +19,18 @@ import Footer from "./components/Footer.vue";
     Footer
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  created() {
+    // Find item provoking body overflow
+    var docWidth = document.documentElement.offsetWidth;
+
+    [].forEach.call(document.querySelectorAll("*"), function(el) {
+      if (el.offsetWidth > docWidth) {
+        console.log(el);
+      }
+    });
+  }
+}
 </script>
 
 <style>

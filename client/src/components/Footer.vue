@@ -55,7 +55,7 @@
       <div class="footer-bottom">
         <p class="footer-link-text">
           <a href="mailto:rodrigoqueiros.nl@gmail.com" target="_blank">rodrigoqueiros.nl@gmail.com</a> ●
-          <a>Sitemap</a> ●
+          <a @click="goToPage('Sitemap')">Sitemap</a> ●
           <a href="https://www.themoviedb.org/" target="_blank">TheMovieDB</a>
         </p>
       </div>
@@ -69,6 +69,9 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Footer extends Vue {
   @Prop() private msg!: string;
+  public goToPage(page): void {
+    this.$router.push({ name: page });
+  }
 }
 </script>
 

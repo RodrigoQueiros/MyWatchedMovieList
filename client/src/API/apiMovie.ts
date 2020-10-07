@@ -28,6 +28,25 @@ export function getTopMovies() {
   );
 }
 
+export function getUpcomingMovies() {
+  return get(
+    "/movie/upcoming" +
+      "?api_key=" +
+      process.env.VUE_APP_API_KEY +
+      "&language=en-US&page=1"
+  );
+}
+
+export function getRecommendedMovieById(body: string) {
+  return get(
+    "/movie/" +
+      body +
+      "/recommendations?api_key=" +
+      process.env.VUE_APP_API_KEY +
+      "&language=en-US"
+  );
+}
+
 export function editSensor(body: string, id: string) {
   return put("/sensors/" + id, body);
 }

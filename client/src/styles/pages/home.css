@@ -2,6 +2,7 @@
 
 .hero {
   position: relative;
+  overflow: hidden;
 }
 
 .hero-space {
@@ -16,7 +17,7 @@
 .hero-wallpaper {
   display: block;
   height: auto;
-  width: 101vw;
+  width: 100vw;
 }
 
 .hero-gradient:after {
@@ -48,6 +49,8 @@
 .hero-content {
   position: absolute;
   top: 20px;
+  left: 0;
+  cursor: pointer;
   margin-left: 50px;
 }
 
@@ -107,9 +110,27 @@
   grid-template-columns: 10vw 40vw 40vw;
 }
 
+/* Sorting title */
+.sorting-titles {
+  margin: 80px 60px 0px 60px;
+  display: flex;
+}
+
+.sorting-title {
+  margin-right: 50px;
+  color: gray;
+  font-weight: 600;
+}
+
+.current-sorting {
+  color: #34344a;
+}
+
 /* Movie cards */
 .movie-cards {
-  margin: 80px 100px;
+  margin: 80px 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
 .movie-card {
@@ -124,16 +145,15 @@
 }
 
 .movie-card-title {
-  font-size: 36px;
-  line-height: 40px;
+  font-size: 32px;
+  line-height: 36px;
   font-weight: 600;
   margin: 0 10px 15px 10px;
+  text-align: center;
 }
 
-/* Hooper (Swiper) */
-.hooper {
-  height: auto !important;
-  margin-bottom: 90px;
+.asd {
+  margin: 20px 10px 50px 10px;
 }
 
 /* Hero animation */
@@ -200,4 +220,17 @@
   font-weight: 500;
   line-height: 34px;
   margin-bottom: 20px;
+}
+
+/* Media queries */
+
+@media (min-width: 1920px) {
+  .hero-space {
+    width: 1920px;
+    height: calc(1 / 4 * 1920px);
+  }
+
+  .hero-wallpaper {
+    width: 1920px;
+  }
 }

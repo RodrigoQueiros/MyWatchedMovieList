@@ -1,8 +1,9 @@
 .footer {
   background-color: #840012;
-  margin-top: 250px;
+  margin-top: 150px;
   width: 100vw;
   height: auto;
+  overflow: hidden;
 }
 
 .footer-flex {
@@ -25,7 +26,7 @@
 }
 .footer-developer-name {
   color: #fff;
-  font-size: 23px;
+  font-size: 22px;
 }
 
 .footer-contact {

@@ -32,44 +32,69 @@
         </transition>
       </span>
     </div>
-    <div class="movie-cards">
-      <!-- Most popular -->
-      <h3>Most popular</h3>
-      <hooper :settings="hooperMovieCard">
-        <slide class="movie-card" v-for="movie in popularMovies" :key="movie.id">
-          <div @click="goToMovie(movie.id)">
-            <div class="movie-card-info">
-              <img class="movie-card-image" :src="movie.poster_path" alt />
-              <div class="overlay">
-                <p class="text-overlay">rating: {{movie.vote_average}}</p>
-                <p class="text-overlay">{{movie.release_date}}</p>
-              </div>
-            </div>
-            <h2 class="movie-card-title">{{movie.title}}</h2>
-          </div>
-        </slide>
-        <hooper-navigation slot="hooper-addons"></hooper-navigation>
-        <hooper-pagination slot="hooper-addons"></hooper-pagination>
-      </hooper>
 
-      <!-- Top rated -->
-      <h3>Top rated</h3>
-      <hooper :settings="hooperMovieCard">
-        <slide class="movie-card" v-for="movie in topMovies" :key="movie.id">
-          <div @click="goToMovie(movie.id)">
-            <div class="movie-card-info">
-              <img class="movie-card-image" :src="movie.poster_path" alt />
-              <div class="overlay">
-                <p class="text-overlay">rating: {{movie.vote_average}}</p>
-                <p class="text-overlay">{{movie.release_date}}</p>
-              </div>
+    <!-- Sorting options -->
+    <div class="sorting-titles">
+      <h2
+        class="sorting-title"
+        @click="sortingOptions('mostPopular')"
+        :class="sortingSelected == 'mostPopular'? currentSorting : ''"
+      >Most popular</h2>
+      <h2
+        class="sorting-title"
+        @click="sortingOptions('topRated')"
+        :class="sortingSelected == 'topRated'? currentSorting : ''"
+      >Top rated</h2>
+      <h2
+        class="sorting-title"
+        @click="sortingOptions('upcoming')"
+        :class="sortingSelected == 'upcoming'? currentSorting : ''"
+      >Upcoming</h2>
+    </div>
+    <!-- Cards -->
+    <div class="movie-cards" v-if="sortingSelected == 'mostPopular'">
+      <div class="movie-card" v-for="movie in popularMovies" :key="movie.id">
+        <div @click="goToMovie(movie.id)">
+          <div class="movie-card-info">
+            <img class="movie-card-image" :src="movie.poster_path" alt />
+            <div class="overlay">
+              <p class="text-overlay">rating: {{movie.vote_average}}</p>
+              <p class="text-overlay">{{movie.release_date}}</p>
             </div>
+          </div>
+          <div class="asd">
             <h2 class="movie-card-title">{{movie.title}}</h2>
           </div>
-        </slide>
-        <hooper-navigation slot="hooper-addons"></hooper-navigation>
-        <hooper-pagination slot="hooper-addons"></hooper-pagination>
-      </hooper>
+        </div>
+      </div>
+    </div>
+    <div class="movie-cards" v-if="sortingSelected == 'topRated'">
+      <div class="movie-card" v-for="movie in topMovies" :key="movie.id">
+        <div @click="goToMovie(movie.id)">
+          <div class="movie-card-info">
+            <img class="movie-card-image" :src="movie.poster_path" alt />
+            <div class="overlay">
+              <p class="text-overlay">rating: {{movie.vote_average}}</p>
+              <p class="text-overlay">{{movie.release_date}}</p>
+            </div>
+          </div>
+          <h2 class="movie-card-title">{{movie.title}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="movie-cards" v-if="sortingSelected == 'upcoming'">
+      <div class="movie-card" v-for="movie in upcomingMovies" :key="movie.id">
+        <div @click="goToMovie(movie.id)">
+          <div class="movie-card-info">
+            <img class="movie-card-image" :src="movie.poster_path" alt />
+            <div class="overlay">
+              <p class="text-overlay">rating: {{movie.vote_average}}</p>
+              <p class="text-overlay">{{movie.release_date}}</p>
+            </div>
+          </div>
+          <h2 class="movie-card-title">{{movie.title}}</h2>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -79,29 +104,11 @@
 import {
   getMovieDetailsById,
   getPopularMovies,
-  getTopMovies
+  getTopMovies,
+  getUpcomingMovies
 } from "../API/apiMovie";
 //TS
 import { Component, Vue } from "vue-property-decorator";
-//Hooper (Swiper)
-import {
-  Hooper,
-  Slide,
-  Pagination as HooperPagination,
-  Navigation as HooperNavigation
-} from "hooper";
-import "hooper/dist/hooper.css";
-
-interface hooper {
-  itemsToShow: number;
-  itemsToSlide: number;
-  infiniteScroll: boolean;
-  wheelControl: boolean;
-  vertical: boolean;
-  autoPlay: boolean;
-  playSpeed: number;
-  mouseDrag: boolean;
-}
 
 type movieType = {
   overview: string;
@@ -114,13 +121,7 @@ type movieType = {
 };
 
 @Component({
-  components: {
-    // VueSlickCarousel
-    Hooper,
-    Slide,
-    HooperPagination,
-    HooperNavigation
-  }
+  components: {}
 })
 export default class Home extends Vue {
   private pauseInterval: boolean = false;
@@ -128,19 +129,14 @@ export default class Home extends Vue {
   private movieTrending: movieType[] = [];
   private popularMovies: movieType[] = [];
   private topMovies: movieType[] = [];
-  private hooperMovieCard: hooper = {
-    itemsToShow: 5,
-    itemsToSlide: 5,
-    infiniteScroll: true,
-    wheelControl: false,
-    vertical: false,
-    autoPlay: false,
-    playSpeed: 2000,
-    mouseDrag: false
-  };
+  private upcomingMovies: movieType[] = [];
+  private sortingSelected: string = "mostPopular";
+  private currentSorting: string = "current-sorting";
 
   created() {
+    // Get movies for hero trending
     getMovieDetailsById("337401").then(response => {
+      // Add outside background images
       response.data.src =
         "https://www.denofgeek.com/wp-content/uploads/2020/09/boycott-mulan-hero-image-2.png?fit=2000%2C500&resize=2000%2C500";
       this.movieTrending.push(response.data);
@@ -149,24 +145,33 @@ export default class Home extends Vue {
         response.data.src = "https://image.ibb.co/fvCZ3G/EMH1.jpg";
         this.movieTrending.push(response.data);
         for (let i = 0; i < this.movieTrending.length; i++) {
+          //Add the missing part to the poster image link
           this.movieTrending[i].poster_path =
             "https://image.tmdb.org/t/p/w500" +
             this.movieTrending[i].poster_path;
+          //Limit the number of chars in the overview
           if (this.movieTrending[i].overview.length >= 270) {
             this.movieTrending[i].overview =
               this.movieTrending[i].overview.substr(0, 270) + "...";
           }
+          //Add minutes to the runtime
           this.movieTrending[i].runtime = this.movieTrending[i].runtime + " m";
           console.log(this.movieTrending);
         }
       });
     });
-
+    // Get popular movies
     getPopularMovies().then(response => {
       this.popularMovies = response.data.results.slice(0, 10);
       for (let i = 0; i < 10; i++) {
+        //Correct the path
         this.popularMovies[i].poster_path =
           "https://image.tmdb.org/t/p/w500" + this.popularMovies[i].poster_path;
+        // Limit the number of chars in the title
+        if (this.popularMovies[i].title.length >= 32) {
+          this.popularMovies[i].title =
+            this.popularMovies[i].title.substr(0, 32) + "...";
+        }
       }
     });
 
@@ -175,10 +180,29 @@ export default class Home extends Vue {
       for (let i = 0; i < 10; i++) {
         this.topMovies[i].poster_path =
           "https://image.tmdb.org/t/p/w500" + this.topMovies[i].poster_path;
+        if (this.topMovies[i].title.length >= 32) {
+          this.topMovies[i].title =
+            this.topMovies[i].title.substr(0, 32) + "...";
+        }
       }
     });
 
+    getUpcomingMovies().then(response => {
+      this.upcomingMovies = response.data.results.slice(0, 10);
+      for (let i = 0; i < 10; i++) {
+        this.upcomingMovies[i].poster_path =
+          "https://image.tmdb.org/t/p/w500" +
+          this.upcomingMovies[i].poster_path;
+
+        if (this.upcomingMovies[i].title.length >= 32) {
+          this.upcomingMovies[i].title =
+            this.upcomingMovies[i].title.substr(0, 32) + "...";
+        }
+      }
+    });
+    // Change hero movie each 5s
     setInterval(() => {
+      //Possible to pause it on hover
       if (!this.pauseInterval) {
         if (this.movieTrendingShow >= 1) {
           this.movieTrendingShow = 0;
@@ -189,7 +213,12 @@ export default class Home extends Vue {
     }, 5000);
   }
   public goToMovie(movieId): void {
+    //Go to the details page of movie
     this.$router.push({ name: "DetailsPage", params: { id: movieId } });
+  }
+  public sortingOptions(type): void {
+    //Change the selected sorting option
+    this.sortingSelected = type;
   }
 }
 </script>

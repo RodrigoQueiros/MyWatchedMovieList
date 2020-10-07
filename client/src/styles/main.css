@@ -73,6 +73,10 @@ h3 {
   margin: 0 auto;
 }
 
+.margin-top {
+  margin-top: 70px;
+}
+
 .container-inside {
   padding: 0 100px;
 }
@@ -95,4 +99,8 @@ h3 {
 
 .color-yellow {
   color: #ffe377;
+}
+
+.center-text {
+  text-align: center;
 }

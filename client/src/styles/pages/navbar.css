@@ -2,8 +2,10 @@
   height: 70px;
   width: 100vw;
   position: fixed;
-  z-index: 2;
   background-color: #840012;
+  top: 0;
+  overflow: hidden;
+  z-index: 2;
 }
 
 .navbar-logo {
@@ -15,7 +17,6 @@
 }
 
 .navbar-logo-a {
-  z-index: 20;
   position: inherit;
 }
 
@@ -171,7 +172,7 @@
   .navbar-menu {
     position: fixed;
     background: #840012;
-    width: 100vw;
+
     height: 20px;
     opacity: 0;
     padding-top: 100px;
