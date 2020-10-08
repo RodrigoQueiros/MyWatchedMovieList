@@ -131,6 +131,7 @@ export default class Home extends Vue {
   private topMovies: movieType[] = [];
   private upcomingMovies: movieType[] = [];
   private sortingSelected: string = "mostPopular";
+  // Css class
   private currentSorting: string = "current-sorting";
 
   created() {

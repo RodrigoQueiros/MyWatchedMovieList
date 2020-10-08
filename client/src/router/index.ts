@@ -8,6 +8,7 @@ import SignUp from "../views/SignUp.vue";
 import WatchList from "../views/WatchList.vue";
 import RandomMovie from "../views/RandomMovie.vue";
 import Sitemap from "../views/Sitemap.vue";
+import Categories from "../views/Categories.vue";
 
 Vue.use(VueRouter);
 
@@ -26,6 +27,11 @@ const routes: RouteConfig[] = [
     path: "/catalog/:id",
     name: "DetailsPage",
     component: DetailsPage
+  },
+  {
+    path: "/categories",
+    name: "Categories",
+    component: Categories
   },
   {
     path: "/login",

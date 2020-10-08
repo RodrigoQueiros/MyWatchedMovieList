@@ -1,4 +1,4 @@
-import { get, post, put } from "../utils/utils";
+import { get } from "../utils/utils";
 
 export function getMovieDetailsById(body: string) {
   return get(
@@ -57,13 +57,13 @@ export function getRandomMovie(body: string) {
   );
 }
 
-export function editSensor(body: string, id: string) {
-  return put("/sensors/" + id, body);
-}
+// export function editSensor(body: string, id: string) {
+//   return put("/sensors/" + id, body);
+// }
 
-export function addSensor(body: string) {
-  return post("/sensors", body);
-}
+// export function addSensor(body: string) {
+//   return post("/sensors", body);
+// }
 
 // export function removeSensor(body: string) {
 //   return remove("/sensors/" + body);

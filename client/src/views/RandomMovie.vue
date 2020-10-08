@@ -1,11 +1,14 @@
 <template>
   <div class="random-movie">
-    <div class="card-details">
+    <div class="random-movie-card">
+      <h2>{{movie.title}}</h2>
       <img :src="movie.poster_path" alt class="random-movie-img" />
-      <div>
-        <h2>{{movie.title}}</h2>
-        <p>{{movie.overview}}</p>
-        <button class="btn" @click="randomMovie()">Random Movie</button>
+      <div class="card-content">
+        <p class="card-content-overview">{{movie.overview}}</p>
+      </div>
+      <div class="buttons">
+        <a class="btn" @click="goToMovie(movie.id)">Details</a>
+        <a class="btn" @click="randomMovie()">Random Movie</a>
       </div>
     </div>
   </div>
@@ -57,6 +60,10 @@ export default class DetailsPage extends Vue {
         "https://image.tmdb.org/t/p/w500" + this.movie.poster_path;
       console.log(this.movie);
     });
+  }
+  public goToMovie(movieId): void {
+    //Go to the details page of movie
+    this.$router.push({ path: "/catalog/" + movieId });
   }
 }
 </script>
