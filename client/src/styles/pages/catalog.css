@@ -15,6 +15,67 @@
   padding: 30px;
 }
 
+/*  Advanced search*/
+
+.catalog-search {
+  margin: 40px 0;
+}
+
+.search-label {
+  font-size: 30px;
+  font-weight: 500;
+  margin: 10px;
+}
+
+.search-input {
+  font-size: 24px;
+  width: 100%;
+  border: #34344a 2px solid;
+  border-radius: 5px;
+  padding: 0 10px;
+}
+
+.search-by-genre {
+  margin-bottom: 30px;
+}
+
+.search-sorting {
+  margin-top: 100px;
+  margin-bottom: 30px;
+}
+
+.search-by-year {
+  margin-bottom: 30px;
+}
+
+.select-input {
+  font-size: 24px;
+  width: 100%;
+  border: #34344a 2px solid;
+  border-radius: 5px;
+  padding: 0 10px;
+}
+
+.button-search {
+  margin-top: 30px;
+  font-size: 30px;
+  line-height: 60px;
+  text-align: center;
+  border-radius: 10px;
+  display: inline-block;
+  width: 100%;
+  color: white;
+  font-weight: 500;
+  background-color: #ffb052;
+  padding: 0 20px;
+}
+
+.button-search:hover {
+  background-color: #840012;
+  transform: translateY(-0.25em);
+  box-shadow: 0 0.5em 0.5em -0.4em #ffb052;
+}
+/* Catalog */
 .catalog-header-line {
   display: flex;
   flex-direction: row;
@@ -57,7 +118,7 @@
 
 /* Card 1 */
 .catlog-cards1 {
-  margin: 40px 20px;
+  margin: 60px 20px 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -88,7 +149,7 @@
 
 /* Card 2 */
 .catlog-cards2 {
-  margin: 40px 20px;
+  margin: 60px 20px 40px 20px;
   display: grid;
   grid-gap: 30px;
   justify-items: center;
@@ -112,11 +173,30 @@
 
 .catalog-pagination-line {
   display: flex;
-  justify-items: center;
+  justify-content: center;
   align-items: center;
   flex-direction: row;
 }
 
 .pagination-icon {
-  font-size: 30px;
+  font-size: 40px;
+}
+
+.paginatin-input {
+  border: #34344a 2px solid;
+  border-radius: 5px;
+  width: 50px;
+  font-size: 24px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.pagination-text {
+  font-size: 24px;
+  line-height: 40px;
+}
+
+.pagination-flex {
+  display: flex;
+  margin: 0 40px;
 }
