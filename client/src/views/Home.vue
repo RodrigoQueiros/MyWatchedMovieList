@@ -35,21 +35,21 @@
 
     <!-- Sorting options -->
     <div class="sorting-titles">
-      <h2
+      <h3
         class="sorting-title"
         @click="sortingOptions('mostPopular')"
         :class="sortingSelected == 'mostPopular'? currentSorting : ''"
-      >Most popular</h2>
-      <h2
+      >Most popular</h3>
+      <h3
         class="sorting-title"
         @click="sortingOptions('topRated')"
         :class="sortingSelected == 'topRated'? currentSorting : ''"
-      >Top rated</h2>
-      <h2
+      >Top rated</h3>
+      <h3
         class="sorting-title"
         @click="sortingOptions('upcoming')"
         :class="sortingSelected == 'upcoming'? currentSorting : ''"
-      >Upcoming</h2>
+      >Upcoming</h3>
     </div>
     <!-- Cards -->
     <div class="movie-cards" v-if="sortingSelected == 'mostPopular'">
@@ -105,10 +105,10 @@ import {
   getMovieDetailsById,
   getPopularMovies,
   getTopMovies,
-  getUpcomingMovies,
-} from '../API/apiMovie';
+  getUpcomingMovies
+} from "../API/apiMovie";
 // TS
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 
 interface movieType {
   overview: string;
@@ -121,7 +121,7 @@ interface movieType {
 }
 
 @Component({
-  components: {},
+  components: {}
 })
 export default class Home extends Vue {
   private pauseInterval: boolean = false;
@@ -130,74 +130,74 @@ export default class Home extends Vue {
   private popularMovies: movieType[] = [];
   private topMovies: movieType[] = [];
   private upcomingMovies: movieType[] = [];
-  private sortingSelected: string = 'mostPopular';
+  private sortingSelected: string = "mostPopular";
   // Css class
-  private currentSorting: string = 'current-sorting';
+  private currentSorting: string = "current-sorting";
 
   public created() {
     // Get movies for hero trending
-    getMovieDetailsById('337401').then((response) => {
+    getMovieDetailsById("337401").then(response => {
       // Add outside background images
       response.data.src =
-        'https://www.denofgeek.com/wp-content/uploads/2020/09/boycott-mulan-hero-image-2.png?fit=2000%2C500&resize=2000%2C500';
+        "https://www.denofgeek.com/wp-content/uploads/2020/09/boycott-mulan-hero-image-2.png?fit=2000%2C500&resize=2000%2C500";
       this.movieTrending.push(response.data);
 
-      getMovieDetailsById('299536').then((response) => {
-        response.data.src = 'https://image.ibb.co/fvCZ3G/EMH1.jpg';
+      getMovieDetailsById("299536").then(response => {
+        response.data.src = "https://image.ibb.co/fvCZ3G/EMH1.jpg";
         this.movieTrending.push(response.data);
         for (let i = 0; i < this.movieTrending.length; i++) {
           // Add the missing part to the poster image link
           this.movieTrending[i].poster_path =
-            'https://image.tmdb.org/t/p/w500' +
+            "https://image.tmdb.org/t/p/w500" +
             this.movieTrending[i].poster_path;
           // Limit the number of chars in the overview
           if (this.movieTrending[i].overview.length >= 270) {
             this.movieTrending[i].overview =
-              this.movieTrending[i].overview.substr(0, 270) + '...';
+              this.movieTrending[i].overview.substr(0, 270) + "...";
           }
           // Add minutes to the runtime
-          this.movieTrending[i].runtime = this.movieTrending[i].runtime + ' m';
+          this.movieTrending[i].runtime = this.movieTrending[i].runtime + " m";
           console.log(this.movieTrending);
         }
       });
     });
     // Get popular movies
-    getPopularMovies().then((response) => {
+    getPopularMovies().then(response => {
       this.popularMovies = response.data.results.slice(0, 10);
       for (let i = 0; i < 10; i++) {
         // Correct the path
         this.popularMovies[i].poster_path =
-          'https://image.tmdb.org/t/p/w500' + this.popularMovies[i].poster_path;
+          "https://image.tmdb.org/t/p/w500" + this.popularMovies[i].poster_path;
         // Limit the number of chars in the title
         if (this.popularMovies[i].title.length >= 32) {
           this.popularMovies[i].title =
-            this.popularMovies[i].title.substr(0, 32) + '...';
+            this.popularMovies[i].title.substr(0, 32) + "...";
         }
       }
     });
 
-    getTopMovies().then((response) => {
+    getTopMovies().then(response => {
       this.topMovies = response.data.results.slice(0, 10);
       for (let i = 0; i < 10; i++) {
         this.topMovies[i].poster_path =
-          'https://image.tmdb.org/t/p/w500' + this.topMovies[i].poster_path;
+          "https://image.tmdb.org/t/p/w500" + this.topMovies[i].poster_path;
         if (this.topMovies[i].title.length >= 32) {
           this.topMovies[i].title =
-            this.topMovies[i].title.substr(0, 32) + '...';
+            this.topMovies[i].title.substr(0, 32) + "...";
         }
       }
     });
 
-    getUpcomingMovies().then((response) => {
+    getUpcomingMovies().then(response => {
       this.upcomingMovies = response.data.results.slice(0, 10);
       for (let i = 0; i < 10; i++) {
         this.upcomingMovies[i].poster_path =
-          'https://image.tmdb.org/t/p/w500' +
+          "https://image.tmdb.org/t/p/w500" +
           this.upcomingMovies[i].poster_path;
 
         if (this.upcomingMovies[i].title.length >= 32) {
           this.upcomingMovies[i].title =
-            this.upcomingMovies[i].title.substr(0, 32) + '...';
+            this.upcomingMovies[i].title.substr(0, 32) + "...";
         }
       }
     });
@@ -215,7 +215,7 @@ export default class Home extends Vue {
   }
   public goToMovie(movieId: number): void {
     const value = movieId.toString();
-    this.$router.push({ name: 'DetailsPage', params: { id: value } });
+    this.$router.push({ name: "DetailsPage", params: { id: value } });
   }
   public sortingOptions(type: string): void {
     // Change the selected sorting option

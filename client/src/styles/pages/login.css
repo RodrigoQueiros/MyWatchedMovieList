@@ -1,13 +1,17 @@
 .login {
-  height: 100vh;
-  background-image: url("../../assets/login-bg.png");
+  height: calc(100vh - 70px);
+  background-image: url("../../assets/login-bg.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  padding-top: 200px;
+
+  position: relative;
 }
 
 .login-box {
-  margin: 0 auto;
+  position: absolute;
+  top: calc(50% - 35px); /* center minus half navbar*/
+  left: 50%;
+  transform: translate(-50%, -50%);
   height: 600px;
   width: 1200px;
   background-color: white;

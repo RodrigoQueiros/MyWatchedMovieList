@@ -2,28 +2,26 @@
   <div class="footer">
     <div class="container">
       <div class="footer-flex">
-        <div class="footer-media">
-          <div>
-            <img class="footer-image" src="../assets/footer-photo.png" alt />
-          </div>
-          <div class="footer-developer">
-            <p class="footer-developer-name">
-              My name is
-              <b class="color-yellow">Rodrigo Queirós</b>
-              and I am 22 years old. I recently
-              completed a degree in Web
-              Development with distinction and I
-              am currently looking for my first
-              job in the front-end
-              development field.
-              I am an extrovert person who has
-              been passionate about technology
-              and its evolution since childhood.
-              As a result, I’ve become highly
-              movitated and focused to learn
-              more and improve in this field.
-            </p>
-          </div>
+        <div class="image-center">
+          <img class="footer-image" src="../assets/footer-photo.png" alt />
+        </div>
+        <div class="footer-developer">
+          <p class="footer-developer-name">
+            My name is
+            <b class="color-yellow">Rodrigo Queirós</b>
+            and I am 22 years old. I recently
+            completed a degree in Web
+            Development with distinction and I
+            am currently looking for my first
+            job in the front-end
+            development field.
+            I am an extrovert person who has
+            been passionate about technology
+            and its evolution since childhood.
+            As a result, I’ve become highly
+            movitated and focused to learn
+            more and improve in this field.
+          </p>
         </div>
         <div class="footer-contact">
           <a
@@ -64,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Footer extends Vue {

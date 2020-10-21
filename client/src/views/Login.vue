@@ -17,7 +17,6 @@
           type="text"
           placeholder="Search by name"
           name="search-by-name-input"
-          v-model="nameSearch"
           v-on:keyup.enter="getMoviesByName()"
         />
 
@@ -27,7 +26,7 @@
           type="password"
           placeholder="Search by name"
           name="search-by-name-input"
-          v-model="nameSearch"
+
           v-on:keyup.enter="getMoviesByName()"
         />
         <button class="button-search">Login</button>

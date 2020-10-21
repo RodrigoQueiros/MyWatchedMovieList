@@ -1,7 +1,10 @@
 <template>
   <div class="app">
     <Navbar />
-    <div class="container margin-top">
+    <div class="container margin-top" v-if="notLogin != 'Login' && notLogin != 'Signup'">
+      <router-view />
+    </div>
+    <div class="margin-top" v-else>
       <router-view />
     </div>
     <div v-if="notLogin != 'Login' && notLogin != 'Signup'">
