@@ -22,22 +22,22 @@
 </template>
     
 <script lang="ts">
-//TS
+// TS
 import { Component, Vue } from "vue-property-decorator";
-//Axios
+// Axios
 import { getAllGenres } from "../API/apiGenre";
 
-type genreType = {
+interface genreType {
   name: string;
   id: number;
   img: string;
   color: string;
-};
+}
 
-type genreImage = {
+interface genreImage {
   name: string;
   color: string;
-};
+}
 
 @Component({
   components: {}
@@ -122,7 +122,7 @@ export default class CategoriesPage extends Vue {
       color: "rgba(200, 150, 50, 0.6)"
     }
   ];
-  created() {
+  public created() {
     getAllGenres().then(response => {
       this.genres = response.data.genres;
       for (let i = 0; i < this.genres.length; i++) {
@@ -132,9 +132,9 @@ export default class CategoriesPage extends Vue {
       console.log(this.genres);
     });
   }
-  public goToGenre(movieId): void {
-    //Go to the details page of movie
-    this.$router.push({ name: "Catalog", params: { movieId } });
+  public goToGenre(movieId: number): void {
+    const value = movieId.toString();
+    this.$router.push({ name: "Catalog", params: { value } });
   }
 }
 </script>

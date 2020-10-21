@@ -164,13 +164,13 @@
 </template>
 
 <script lang="ts">
-//TS
+// TS
 import { Component, Vue } from "vue-property-decorator";
 // Axios
 import { getMoviesAdvancedSearch, getMoviesByName } from "../API/apiDiscover";
 import { getAllGenres } from "../API/apiGenre";
 
-type movieType = {
+interface movieType {
   overview: string;
   title: string;
   poster_path: string;
@@ -178,12 +178,12 @@ type movieType = {
   vote_average: number;
   id: number;
   src: string;
-};
+}
 
-type genreType = {
+interface genreType {
   name: string;
   id: number;
-};
+}
 
 @Component({
   components: {}
@@ -202,51 +202,58 @@ export default class Catalog extends Vue {
   //   Css class
   private selected: string = "view-selected";
   private notSelected: string = "view-not-selected";
-  created() {
-    //Get prefered view
-    if (localStorage.getItem("view")) {
-      this.viewSelected = parseInt(localStorage.getItem("view"));
+  public created() {
+    // Get prefered view
+    const local = localStorage.getItem("view");
+    if (local) {
+      this.viewSelected = parseInt(local);
     }
-    if (this.$route.params.movieId) {
-      this.genreSelected = this.$route.params.movieId;
+
+    //If in categories page genre selected, this will make the catalog be filtered by the selected genre
+    if (this.$route.params.value) {
+      this.genreSelected = this.$route.params.value;
     }
+    // Get movies
     this.getMovies();
 
-    //Get all genres
-
+    // Get all genres
     getAllGenres().then(response => {
       this.genres = response.data.genres;
     });
   }
-  public goToMovie(movieId): void {
-    //Go to the details page of movie
+  public goToMovie(movieId: number): void {
+    // Go to the details page of movie
     this.$router.push({ path: "/catalog/" + movieId });
   }
 
-  public changeView(changeTo): void {
+  public changeView(changeTo: number): void {
     this.viewSelected = changeTo;
-    //Save prefered view
-    localStorage.setItem("view", changeTo);
+    // Save prefered view
+    localStorage.setItem("view", changeTo.toString());
   }
 
   public getMoviesByName(): void {
+    //Search state 1-by name, 2-by sort,genre,year
     this.searchSelected = 1;
-    let query = "&query=" + this.nameSearch + "&page=" + this.currentPage;
+
+    //Api request
+    const query = "&query=" + this.nameSearch + "&page=" + this.currentPage;
     console.log(query);
     getMoviesByName(query).then(response => {
       this.movies = response.data.results;
       this.totalPages = response.data.total_pages;
 
       for (let i = 0; i < 20; i++) {
-        //Correct the path
+        // Correct the path
         this.movies[i].poster_path =
           "https://image.tmdb.org/t/p/w500" + this.movies[i].poster_path;
 
+        //If overview length to big, reduce it
         if (this.movies[i].overview.length >= 300) {
           this.movies[i].overview =
             this.movies[i].overview.substr(0, 300) + "...";
         }
-
+        //If title length to big, reduce it
         if (this.movies[i].title.length >= 32) {
           this.movies[i].title = this.movies[i].title.substr(0, 32) + "...";
         }
@@ -273,13 +280,12 @@ export default class Catalog extends Vue {
       query = query + "&primary_release_year=" + this.yearInput;
     }
 
-    console.log(query);
-
+    //Api request
     getMoviesAdvancedSearch(query).then(response => {
       this.movies = response.data.results;
       this.totalPages = response.data.total_pages;
       for (let i = 0; i < 20; i++) {
-        //Correct the path
+        // Correct the path
         this.movies[i].poster_path =
           "https://image.tmdb.org/t/p/w500" + this.movies[i].poster_path;
 

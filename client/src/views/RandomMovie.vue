@@ -15,9 +15,9 @@
 </template>
 
 <script lang="ts">
-//TS
+// TS
 import { Component, Vue } from "vue-property-decorator";
-//Axios
+// Axios
 import { getRandomMovie } from "../API/apiMovie";
 
 interface movieModel {
@@ -44,13 +44,17 @@ export default class DetailsPage extends Vue {
     src: ""
   };
 
-  created() {
+  public created() {
     this.randomMovie();
+  }
+  public goToMovie(movieId: number): void {
+    // Go to the details page of movie
+    this.$router.push({ path: "/catalog/" + movieId.toString() });
   }
 
   private randomMovie(): void {
-    let num1 = Math.floor(Math.random() * 499) + 1;
-    let num2 = Math.floor(Math.random() * 20);
+    const num1 = Math.floor(Math.random() * 499) + 1;
+    const num2 = Math.floor(Math.random() * 20);
     console.log(num1);
     console.log(num2);
     getRandomMovie(num1.toString()).then(response => {
@@ -60,10 +64,6 @@ export default class DetailsPage extends Vue {
         "https://image.tmdb.org/t/p/w500" + this.movie.poster_path;
       console.log(this.movie);
     });
-  }
-  public goToMovie(movieId): void {
-    //Go to the details page of movie
-    this.$router.push({ path: "/catalog/" + movieId });
   }
 }
 </script>

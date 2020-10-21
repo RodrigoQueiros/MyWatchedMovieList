@@ -64,12 +64,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Footer extends Vue {
   @Prop() private msg!: string;
-  public goToPage(page): void {
+  public goToPage(page: string): void {
     this.$router.push({ name: page });
   }
 }

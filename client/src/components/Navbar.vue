@@ -2,13 +2,13 @@
   <div class="navbar">
     <div class="container">
       <a href class="navbar-logo-a">
-        <img src="../assets/logo.png" alt="logo vono" class="navbar-logo inside-left" />
+        <img @click="goToPage('Home')" src="../assets/logo.png" alt="logo vono" class="navbar-logo" />
       </a>
       <input class="menu-btn" type="checkbox" id="menu-btn" />
-      <label class="menu-icon inside-right" for="menu-btn">
+      <label class="menu-icon" for="menu-btn">
         <span class="navicon"></span>
       </label>
-      <ul class="navbar-menu inside-right">
+      <ul class="navbar-menu">
         <li class="navbar-menu-element">
           <a class="navbar-menu-link" @click="goToPage('Home')">Home</a>
         </li>
@@ -38,7 +38,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Navbar extends Vue {
   @Prop() private msg!: string;
-  public goToPage(page): void {
+  public goToPage(page: string): void {
     this.$router.push({ name: page });
   }
 }
