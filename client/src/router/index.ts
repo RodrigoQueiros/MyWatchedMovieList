@@ -9,6 +9,7 @@ import WatchList from "../views/WatchList.vue";
 import RandomMovie from "../views/RandomMovie.vue";
 import Sitemap from "../views/Sitemap.vue";
 import Categories from "../views/Categories.vue";
+import { auth } from "../config/firebase";
 
 Vue.use(VueRouter);
 
@@ -46,7 +47,10 @@ const routes: RouteConfig[] = [
   {
     path: "/watchlist/:id",
     name: "WatchList",
-    component: WatchList
+    component: WatchList,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/random",
@@ -75,6 +79,16 @@ const routes: RouteConfig[] = [
 
 const router = new VueRouter({
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
+
+  if (requiresAuth && !auth.currentUser) {
+    next("/login");
+  } else {
+    next();
+  }
 });
 
 export default router;

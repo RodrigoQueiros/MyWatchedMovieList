@@ -4,7 +4,9 @@
     <div class="container margin-top">
       <router-view />
     </div>
-    <Footer />
+    <div v-if="notLogin != 'Login' && notLogin != 'Signup'">
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -20,15 +22,10 @@ import Footer from "./components/Footer.vue";
   }
 })
 export default class App extends Vue {
-  created() {
-    // Find item provoking body overflow
-    var docWidth = document.documentElement.offsetWidth;
-
-    [].forEach.call(document.querySelectorAll("*"), function(el) {
-      if (el.offsetWidth > docWidth) {
-        console.log(el);
-      }
-    });
+  private notLogin: string = "";
+  public created() {
+    this.notLogin = this.$route.name;
+    console.log(this.notLogin);
   }
 }
 </script>

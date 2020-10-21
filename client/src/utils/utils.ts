@@ -1,5 +1,5 @@
-import config from "../config/config";
-import axios from "axios";
+import config from '../config/config';
+import axios from 'axios';
 //
 export function post(uri: string, data: string) {
   return axios.post(endpoint(uri), data);
