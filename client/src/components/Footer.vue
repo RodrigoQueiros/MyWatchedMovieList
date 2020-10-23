@@ -53,7 +53,7 @@
       <div class="footer-bottom">
         <p class="footer-link-text">
           <a href="mailto:rodrigoqueiros.nl@gmail.com" target="_blank">rodrigoqueiros.nl@gmail.com</a> ●
-          <a @click="goToPage('Sitemap')">Sitemap</a> ●
+          <a @click="goToPage('Sitemap')" href>Sitemap</a> ●
           <a href="https://www.themoviedb.org/" target="_blank">TheMovieDB</a>
         </p>
       </div>

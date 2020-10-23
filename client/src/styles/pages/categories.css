@@ -61,5 +61,50 @@
   font-size: 40px;
   font-weight: 500;
   color: #fff;
-  z-index: 2;
+  z-index: 1;
+}
+
+@media (max-width: 1200px) {
+  .categories {
+    margin: 50px 100px;
+  }
+
+  .categories-header {
+    margin: 150px 0 50px 0;
+  }
+
+  .categories-name {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-gap: 30px;
+  }
+
+  .categories-text {
+    font-size: 35px;
+  }
+}
+
+@media (max-width: 900px) {
+  .categories {
+    margin: 50px 50px;
+  }
+
+  .categories-name {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-gap: 20px;
+  }
+
+  .categories-text {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .categories-header {
+    margin: 120px 0 40px 0;
+    font-size: 40px;
+  }
+
+  .categories {
+    margin: 50px 20px;
+  }
 }

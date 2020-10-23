@@ -54,16 +54,16 @@
     <!-- Cards -->
     <div class="movie-cards" v-if="sortingSelected == 'mostPopular'">
       <div class="movie-card" v-for="movie in popularMovies" :key="movie.id">
-        <div @click="goToMovie(movie.id)">
+        <div>
           <div class="movie-card-info">
-            <img class="movie-card-image" :src="movie.poster_path" alt />
+            <img class="movie-card-image" :src="movie.poster_path" alt @click="goToMovie(movie.id)" />
             <div class="overlay">
               <p class="text-overlay">rating: {{movie.vote_average}}</p>
               <p class="text-overlay">{{movie.release_date}}</p>
             </div>
           </div>
-          <div class="asd">
-            <h2 class="movie-card-title">{{movie.title}}</h2>
+          <div class="card-title-space">
+            <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
           </div>
         </div>
       </div>
@@ -78,7 +78,9 @@
               <p class="text-overlay">{{movie.release_date}}</p>
             </div>
           </div>
-          <h2 class="movie-card-title">{{movie.title}}</h2>
+          <div class="card-title-space">
+            <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
+          </div>
         </div>
       </div>
     </div>
@@ -92,7 +94,9 @@
               <p class="text-overlay">{{movie.release_date}}</p>
             </div>
           </div>
-          <h2 class="movie-card-title">{{movie.title}}</h2>
+          <div class="card-title-space">
+            <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
+          </div>
         </div>
       </div>
     </div>

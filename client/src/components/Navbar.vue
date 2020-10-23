@@ -4,7 +4,7 @@
       <a href class="navbar-logo-a">
         <img @click="goToPage('Home')" src="../assets/logo.png" alt="logo vono" class="navbar-logo" />
       </a>
-      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <input class="menu-btn" type="checkbox" id="menu-btn" v-model="checked" />
       <label class="menu-icon" for="menu-btn">
         <span class="navicon"></span>
       </label>
@@ -37,9 +37,11 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class Navbar extends Vue {
+  private checked: boolean = false;
   @Prop() private msg!: string;
   public goToPage(page: string): void {
     this.$router.push({ name: page });
+    this.checked = false;
   }
 }
 </script>
