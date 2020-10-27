@@ -1,7 +1,7 @@
 <template>
   <div class="random-movie">
     <div class="random-movie-card">
-      <h2>{{movie.title}}</h2>
+      <h2 class="random-movie-title">{{movie.title}}</h2>
       <img :src="movie.poster_path" alt class="random-movie-img" />
       <div class="card-content">
         <p class="card-content-overview">{{movie.overview}}</p>
@@ -19,6 +19,8 @@
 import { Component, Vue } from "vue-property-decorator";
 // Axios
 import { getRandomMovie } from "../API/apiMovie";
+// Mixin
+import GoToMovie from "../components/mixins/goToMovie";
 
 interface movieModel {
   overview: string;
@@ -31,7 +33,8 @@ interface movieModel {
 }
 
 @Component({
-  components: {}
+  components: {},
+  mixins: [GoToMovie]
 })
 export default class DetailsPage extends Vue {
   private movie: movieModel = {
@@ -46,10 +49,6 @@ export default class DetailsPage extends Vue {
 
   public created() {
     this.randomMovie();
-  }
-  public goToMovie(movieId: number): void {
-    // Go to the details page of movie
-    this.$router.push({ path: "/catalog/" + movieId.toString() });
   }
 
   private randomMovie(): void {

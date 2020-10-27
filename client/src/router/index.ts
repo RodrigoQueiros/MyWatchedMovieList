@@ -82,8 +82,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  //To the top of the page always
+  window.scrollTo(0, 0);
+
+  //Auth
   const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
 
+  //If no access to page, redirect to login
   if (requiresAuth && !auth.currentUser) {
     next("/login");
   } else {

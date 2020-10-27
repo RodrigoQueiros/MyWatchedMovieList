@@ -44,3 +44,39 @@
 .login-text {
   margin-bottom: 40px;
 }
+
+/* Signup */
+
+.signup-box {
+  position: absolute;
+  top: calc(50% - 35px); /* center minus half navbar*/
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 600px;
+  width: 1200px;
+  background-color: white;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.signup-box-left {
+  height: 100%;
+  padding: 40px;
+  background-color: white;
+  border-radius: 20px 0 0 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.signup-box-right {
+  background-color: #840012;
+  padding: 40px;
+  border-radius: 0 20px 20px 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

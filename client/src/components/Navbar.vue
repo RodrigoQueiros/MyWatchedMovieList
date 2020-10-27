@@ -34,15 +34,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import GoToPage from "../components/mixins/goToPage";
 
-@Component
+@Component({
+  mixins: [GoToPage]
+})
 export default class Navbar extends Vue {
-  private checked: boolean = false;
-  @Prop() private msg!: string;
-  public goToPage(page: string): void {
-    this.$router.push({ name: page });
-    this.checked = false;
-  }
 }
 </script>
 

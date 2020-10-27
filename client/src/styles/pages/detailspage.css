@@ -2,32 +2,160 @@
   margin: 100px 50px;
 }
 
+.recommend-space {
+  width: 1000px;
+  margin: 0 auto;
+}
+
 .card-details {
+  width: 1000px;
   background-color: white;
   box-shadow: 0px 3px 6px #00000029;
   border-radius: 20px;
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 35% 65%;
+  margin: 0 auto;
 }
 
 .card-details-left {
-  padding: 50px;
+  padding: 30px;
 }
 
 .card-details-right {
-  padding: 50px 50px 50px 0;
+  padding: 30px 30px 30px 0;
+}
+
+.details-button.down > button {
+  display: none;
 }
 
 .details-movie-image {
   width: 100%;
   height: auto;
+  border-radius: 10px;
+}
+
+.card-details-right > h1 {
+  font-size: 38px;
+  line-height: 42px;
+  margin-bottom: 15px;
 }
 
 .details-movie-text > p {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .recommend-movies-title {
   margin-top: 100px;
   text-align: center;
+  font-size: 40px;
+}
+
+@media (max-width: 1100px) {
+  .card-details {
+    width: auto;
+    grid-template-columns: 35% 65%;
+  }
+
+  .card-details-right > h1 {
+    font-size: 32px;
+    line-height: 36px;
+  }
+
+  .details-movie-text > p {
+    font-size: 18px;
+  }
+
+  .details-button > button {
+    font-size: 24px;
+  }
+
+  .recommend-space {
+    width: auto;
+  }
+
+  .recommend-movies-title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 800px) {
+  .details-page {
+    margin: 100px 20px;
+  }
+
+  .card-details {
+    grid-template-columns: 40% 60%;
+  }
+
+  .card-details-left {
+    padding: 20px;
+  }
+
+  .card-details-right {
+    padding: 20px 20px 20px 0;
+  }
+
+  .card-details-right > h1 {
+    font-size: 28px;
+    line-height: 32px;
+  }
+
+  .details-movie-text > p {
+    font-size: 18px;
+  }
+
+  .details-button > button {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-details {
+    grid-template-columns: 100%;
+    justify-items: center;
+  }
+
+  .details-button.up > button {
+    display: none;
+  }
+
+  .details-button.down > button {
+    display: block;
+    margin-bottom: 20px;
+    width: 240px;
+  }
+
+  .card-details-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .details-movie-image {
+    width: 50%;
+  }
+
+  .card-details-right {
+    padding: 0 40px 10px 40px;
+  }
+}
+
+@media (max-width: 450px) {
+  .details-movie-image {
+    width: 70%;
+  }
+
+  .card-details-right {
+    padding: 0 20px 20px 20px;
+  }
+
+  .card-details-right > h1 {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .details-movie-text > p {
+    font-size: 16px;
+  }
 }

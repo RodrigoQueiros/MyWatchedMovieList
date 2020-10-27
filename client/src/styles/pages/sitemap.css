@@ -1,0 +1,39 @@
+.sitemap {
+  margin: 100px 200px;
+  min-height: calc(100vh - 100px - 70px - 500px);
+}
+
+.sitemap-header {
+  text-align: center;
+  margin: 200px 0 100px 0;
+}
+
+.sitemap-space {
+  width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sitemap-text {
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 30px;
+  color: #840012;
+  transition: all 0.2ms ease-in-out;
+}
+
+.sitemap-text.secondary {
+  font-size: 20px;
+  line-height: 28px;
+  color: #ffb052;
+  margin-left: 20px;
+}
+
+.sitemap-text.first {
+  margin-top: 15px;
+}
+.sitemap-text:hover {
+  text-decoration: underline;
+}

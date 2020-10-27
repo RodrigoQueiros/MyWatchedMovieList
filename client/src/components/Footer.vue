@@ -53,7 +53,7 @@
       <div class="footer-bottom">
         <p class="footer-link-text">
           <a href="mailto:rodrigoqueiros.nl@gmail.com" target="_blank">rodrigoqueiros.nl@gmail.com</a> ●
-          <a @click="goToPage('Sitemap')" href>Sitemap</a> ●
+          <a @click="goToPage('Sitemap')" style="cursor:pointer">Sitemap</a> ●
           <a href="https://www.themoviedb.org/" target="_blank">TheMovieDB</a>
         </p>
       </div>
@@ -63,13 +63,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import GoToPage from "../components/mixins/goToPage";
 
-@Component
-export default class Footer extends Vue {
-  @Prop() private msg!: string;
-  public goToPage(page: string): void {
-    this.$router.push({ name: page });
-  }
-}
+@Component({
+  mixins: [GoToPage]
+})
+export default class Footer extends Vue {}
 </script>
 

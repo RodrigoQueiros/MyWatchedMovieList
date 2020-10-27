@@ -113,6 +113,8 @@ import {
 } from "../API/apiMovie";
 // TS
 import { Component, Vue } from "vue-property-decorator";
+// Mixin
+import GoToMovie from "../components/mixins/goToMovie";
 
 interface movieType {
   overview: string;
@@ -125,7 +127,8 @@ interface movieType {
 }
 
 @Component({
-  components: {}
+  components: {},
+  mixins: [GoToMovie]
 })
 export default class Home extends Vue {
   private pauseInterval: boolean = false;
@@ -217,10 +220,7 @@ export default class Home extends Vue {
       }
     }, 5000);
   }
-  public goToMovie(movieId: number): void {
-    const value = movieId.toString();
-    this.$router.push({ name: "DetailsPage", params: { id: value } });
-  }
+
   public sortingOptions(type: string): void {
     // Change the selected sorting option
     this.sortingSelected = type;

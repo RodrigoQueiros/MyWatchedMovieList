@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <Navbar />
+
     <div class="container margin-top" v-if="notLogin != 'Login' && notLogin != 'Signup'">
       <router-view />
     </div>
@@ -26,9 +27,19 @@ import Footer from "./components/Footer.vue";
 })
 export default class App extends Vue {
   private notLogin: string = "";
+
   public created() {
-    this.notLogin = this.$route.name;
-    console.log(this.notLogin);
+    this.getRouteName();
+  }
+  public updated() {
+    this.getRouteName();
+  }
+
+  public getRouteName(): void {
+    const local = this.$route.name;
+    if (local) {
+      this.notLogin = local;
+    }
   }
 }
 </script>

@@ -58,6 +58,7 @@
           <div>
             <h2 class="catalog-title">Catalogue</h2>
           </div>
+
           <div class="catalog-pagination-line">
             <div>
               <i
@@ -83,6 +84,7 @@
               ></i>
             </div>
           </div>
+
           <div class="catalog-views">
             <p class="catalog-views-text">views</p>
             <i
@@ -169,6 +171,8 @@ import { Component, Vue } from "vue-property-decorator";
 // Axios
 import { getMoviesAdvancedSearch, getMoviesByName } from "../API/apiDiscover";
 import { getAllGenres } from "../API/apiGenre";
+// Mixin
+import GoToMovie from "../components/mixins/goToMovie";
 
 interface movieType {
   overview: string;
@@ -186,7 +190,8 @@ interface genreType {
 }
 
 @Component({
-  components: {}
+  components: {},
+  mixins: [GoToMovie]
 })
 export default class Catalog extends Vue {
   private searchSelected: number = 0;
@@ -220,10 +225,6 @@ export default class Catalog extends Vue {
     getAllGenres().then(response => {
       this.genres = response.data.genres;
     });
-  }
-  public goToMovie(movieId: number): void {
-    // Go to the details page of movie
-    this.$router.push({ path: "/catalog/" + movieId });
   }
 
   public changeView(changeTo: number): void {
@@ -303,6 +304,13 @@ export default class Catalog extends Vue {
     });
   }
 
+  public searchMovie(): void {
+    this.nameSearch = "";
+    this.searchSelected = 0;
+    this.currentPage = 1;
+    this.getMovies();
+  }
+
   public goToPrevious(): void {
     if (this.currentPage > 1) {
       this.currentPage -= 1;
@@ -334,13 +342,6 @@ export default class Catalog extends Vue {
         this.getMoviesByName();
       }
     }
-  }
-
-  public searchMovie(): void {
-    this.nameSearch = "";
-    this.searchSelected = 0;
-    this.currentPage = 1;
-    this.getMovies();
   }
 }
 </script>

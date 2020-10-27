@@ -1,9 +1,11 @@
 .random-movie {
-  margin: 200px 500px 100px 500px;
+  margin: 200px 0 100px 0;
   min-height: calc(100vh - 70px - 630px); /*  100vh - navbar - footer*/
 }
 
 .random-movie-card {
+  margin: 0 auto;
+  width: 700px;
   display: grid;
   justify-items: center;
   grid-template-columns: 100%;
@@ -11,6 +13,10 @@
   box-shadow: 0px 3px 6px #00000029;
   border-radius: 20px;
   padding: 30px 30px;
+}
+
+.random-movie-title {
+  text-align: center;
 }
 
 .random-movie-img {
@@ -53,4 +59,51 @@
   background-color: #840012;
   transform: translateY(-0.25em);
   box-shadow: 0 0.5em 0.5em -0.4em #ffb052;
+}
+
+@media (max-width: 800px) {
+  .random-movie-card {
+    width: auto;
+    margin: 100px 0 0 0;
+  }
+
+  .random-movie {
+    margin: 150px 50px 100px 50px;
+  }
+
+  .buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .random-movie-title {
+    text-align: center;
+  }
+
+  .random-movie-title {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-content-overview {
+    margin: 0;
+    font-size: 22px;
+    margin: 0;
+  }
+
+  .random-movie {
+    margin: 150px 20px 50px 20px;
+  }
+
+  .random-movie-card {
+    padding: 20px 10px;
+  }
+
+  .card-content {
+    padding: 20px 10px;
+  }
+
+  .card-content-overview {
+    font-size: 18px;
+  }
 }

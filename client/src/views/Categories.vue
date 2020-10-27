@@ -26,6 +26,8 @@
 import { Component, Vue } from "vue-property-decorator";
 // Axios
 import { getAllGenres } from "../API/apiGenre";
+// Mixin
+import GoToGenre from "../components/mixins/goToGenre";
 
 interface genreType {
   name: string;
@@ -40,7 +42,8 @@ interface genreImage {
 }
 
 @Component({
-  components: {}
+  components: {},
+  mixins: [GoToGenre]
 })
 export default class CategoriesPage extends Vue {
   private genres: genreType[] = [];
@@ -131,10 +134,6 @@ export default class CategoriesPage extends Vue {
       }
       console.log(this.genres);
     });
-  }
-  public goToGenre(movieId: number): void {
-    const value = movieId.toString();
-    this.$router.push({ name: "Catalog", params: { value } });
   }
 }
 </script>
