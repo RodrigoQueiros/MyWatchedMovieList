@@ -26,10 +26,12 @@ Background: #FAFAFA
 
 body {
   background-color: #fafafa;
+  overflow-x: hidden;
 }
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 * {

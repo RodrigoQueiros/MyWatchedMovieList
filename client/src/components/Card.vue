@@ -33,7 +33,9 @@ interface movieModel {
   mixins: [GoToMovie]
 })
 export default class Card extends Vue {
-  private movie: movieModel = this.$props.movie;
+
+  @Prop({required: true}) readonly movie: movieModel
+  // private movie: movieModel = this.$props.movie;
 }
 </script>
 
