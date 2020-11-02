@@ -1,6 +1,7 @@
 <template>
   <div class="login">
     <div class="login-box">
+      <!-- To create an account side -->
       <div class="login-box-left">
         <h3 class="color-white center-text">Don't you have an account yet?</h3>
         <p class="color-white center-text login-text">
@@ -9,6 +10,7 @@
         </p>
         <a class="btn" @click="goToPage('Signup')">Create account</a>
       </div>
+      <!-- Login side -->
       <div class="login-box-right">
         <h3>Login</h3>
         <label for="search-by-name" class="search-label">Email</label>

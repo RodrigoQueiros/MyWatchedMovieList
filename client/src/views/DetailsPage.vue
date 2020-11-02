@@ -2,12 +2,13 @@
   <div class="details-page">
     <div class="card-details">
       <div class="card-details-left">
+        <!-- Image and button -->
         <img :src="movie.poster_path" class="details-movie-image" />
         <div class="details-button up">
           <button class="button-search">Add to list</button>
         </div>
       </div>
-
+      <!-- Title and info -->
       <div class="card-details-right">
         <h1>{{movie.title}}</h1>
         <div class="details-movie-text">
@@ -55,41 +56,41 @@
         <button class="button-search">Add to list</button>
       </div>
     </div>
-
+    <!-- Recomend 1 based on the movie -->
     <div class="recommend-space">
       <h2 class="recommend-movies-title">If you liked {{movie.title}}</h2>
       <div class="movie-cards">
         <h3 class="center-text" v-if="recommendedMovies.length == 0">No recommended movies ):</h3>
         <div class="movie-card" v-for="movie in recommendedMovies" :key="movie.id">
-          <div @click="goToMovie(movie.id)">
+          <div class="card">
             <div class="movie-card-info">
               <img class="movie-card-image" :src="movie.poster_path" alt />
-              <div class="overlay">
-                <p class="text-overlay">rating: {{movie.vote_average}}</p>
-                <p class="text-overlay">{{movie.release_date}}</p>
+              <div class="overlay" @click="goToMovie(movie.id)">
+                <p class="text-overlay">{{movie.vote_average}}</p>
+                <button class="button-card">Add to list</button>
               </div>
             </div>
-            <div class="asd">
-              <h2 class="movie-card-title">{{movie.title}}</h2>
+            <div class="card-title-space">
+              <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
             </div>
           </div>
         </div>
       </div>
-
+      <!-- Recomend 2 based on random movie genre -->
       <h2 class="recommend-movies-title">If you like {{randomGenre.name}}</h2>
       <div class="movie-cards">
         <h3 class="center-text" v-if="recommendedMoviesbyGenre.length == 0">No recommended movies ):</h3>
         <div class="movie-card" v-for="movie in recommendedMoviesbyGenre" :key="movie.id">
-          <div @click="goToMovie(movie.id)">
+          <div class="card">
             <div class="movie-card-info">
               <img class="movie-card-image" :src="movie.poster_path" alt />
-              <div class="overlay">
-                <p class="text-overlay">rating: {{movie.vote_average}}</p>
-                <p class="text-overlay">{{movie.release_date}}</p>
+              <div class="overlay" @click="goToMovie(movie.id)">
+                <p class="text-overlay">{{movie.vote_average}}</p>
+                <button class="button-card">Add to list</button>
               </div>
             </div>
-            <div class="asd">
-              <h2 class="movie-card-title">{{movie.title}}</h2>
+            <div class="card-title-space">
+              <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
             </div>
           </div>
         </div>
@@ -170,12 +171,12 @@ export default class DetailsPage extends Vue {
   public getMovie(): void {
     getMovieDetailsById(this.movieId).then(response => {
       this.movie = response.data;
-
+      // correct the path
       this.movie.poster_path =
         "https://image.tmdb.org/t/p/w500" + this.movie.poster_path;
-
+      // Add minutes to the time
       this.movie.runtime = this.movie.runtime + " m";
-
+      // Get a random genre to recommend
       this.randomGenre = this.movie.genres[
         Math.floor(Math.random() * this.movie.genres.length)
       ];

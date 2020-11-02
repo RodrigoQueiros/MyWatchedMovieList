@@ -52,16 +52,16 @@ export default class DetailsPage extends Vue {
   }
 
   private randomMovie(): void {
+    // Random between 1 and 500 (pages)
     const num1 = Math.floor(Math.random() * 499) + 1;
+    // Random between 0 and 19 (items in one page)
     const num2 = Math.floor(Math.random() * 20);
-    console.log(num1);
-    console.log(num2);
+
     getRandomMovie(num1.toString()).then(response => {
       this.movie = response.data.results[num2];
 
       this.movie.poster_path =
         "https://image.tmdb.org/t/p/w500" + this.movie.poster_path;
-      console.log(this.movie);
     });
   }
 }

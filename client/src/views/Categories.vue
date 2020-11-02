@@ -1,7 +1,8 @@
 <template>
-  <div class="categories">
+  <div class="categories container-inside">
     <h1 class="categories-header">Categories</h1>
     <div class="categories-name">
+      <!-- Categories card -->
       <div
         class="categories-space"
         v-for="genre in genres"
@@ -47,6 +48,7 @@ interface genreImage {
 })
 export default class CategoriesPage extends Vue {
   private genres: genreType[] = [];
+  // Hard date for each card
   private images: genreImage[] = [
     {
       name: "action.jpg",
@@ -132,7 +134,6 @@ export default class CategoriesPage extends Vue {
         this.genres[i].img = this.images[i].name;
         this.genres[i].color = this.images[i].color;
       }
-      console.log(this.genres);
     });
   }
 }

@@ -2,9 +2,11 @@
   <div class="catalog">
     <div class="catalog-space">
       <div>
+        <!-- Search inputs -->
         <div class="catalog-box">
           <h2 class="catalog-title">Advanced Search</h2>
           <div class="catalog-search">
+            <!-- Search by name -->
             <div class="search-by-name-input">
               <label for="search-by-name" class="search-label">Search for movie name</label>
               <input
@@ -15,41 +17,50 @@
                 v-model="nameSearch"
                 v-on:keyup.enter="getMoviesByName()"
               />
-              <button class="button-search" @click="getMoviesByName()">Search</button>
+              <div class="flex">
+                <button class="button-search" @click="getMoviesByName()">Search</button>
+              </div>
             </div>
-            <div class="search-sorting">
-              <label for="search-sorting-input" class="search-label">Sort by</label>
-              <select v-model="sortSelected" name="search-sorting-input" class="select-input">
-                <option disabled value>Select one</option>
-                <option value="popularity.asc">Popularity Asc</option>
-                <option value="popularity.desc">Popularity Desc</option>
-                <option value="original_title.asc">Title Asc</option>
-                <option value="original_title.desc">Title Desc</option>
-                <option value="vote_average.asc">Rating Asc</option>
-                <option value="vote_average.desc">Rating Desc</option>
-                <option value="release_date.asc">Date Asc</option>
-                <option value="release_date.desc">Date Desc</option>
-              </select>
+            <div>
+              <!-- Sort by -->
+              <div class="search-sorting">
+                <label for="search-sorting-input" class="search-label">Sort by</label>
+                <select v-model="sortSelected" name="search-sorting-input" class="select-input">
+                  <option disabled value>Select one</option>
+                  <option value="popularity.asc">Popularity Asc</option>
+                  <option value="popularity.desc">Popularity Desc</option>
+                  <option value="original_title.asc">Title Asc</option>
+                  <option value="original_title.desc">Title Desc</option>
+                  <option value="vote_average.asc">Rating Asc</option>
+                  <option value="vote_average.desc">Rating Desc</option>
+                  <option value="release_date.asc">Date Asc</option>
+                  <option value="release_date.desc">Date Desc</option>
+                </select>
+              </div>
+              <!-- Sort by genre -->
+              <div class="search-by-genre">
+                <label for="search-genre-input" class="search-label">Genre</label>
+                <select v-model="genreSelected" name="search-genre-input" class="select-input">
+                  <option value>Not selected</option>
+                  <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{genre.name}}</option>
+                </select>
+              </div>
+              <!-- Sort by year -->
+              <div class="search-by-year">
+                <label for="search-year-input" class="search-label">Year</label>
+                <input
+                  class="search-input"
+                  type="text"
+                  placeholder="Search by year [1990-2020]"
+                  name="search-year-input"
+                  v-model="yearInput"
+                  v-on:keyup.enter="searchMovie()"
+                />
+              </div>
+              <div class="flex">
+                <button class="button-search" @click="searchMovie()">Search</button>
+              </div>
             </div>
-            <div class="search-by-genre">
-              <label for="search-genre-input" class="search-label">Genre</label>
-              <select v-model="genreSelected" name="search-genre-input" class="select-input">
-                <option value>Not selected</option>
-                <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{genre.name}}</option>
-              </select>
-            </div>
-            <div class="search-by-year">
-              <label for="search-year-input" class="search-label">Year</label>
-              <input
-                class="search-input"
-                type="text"
-                placeholder="Search by year [1990-2020]"
-                name="search-year-input"
-                v-model="yearInput"
-                v-on:keyup.enter="searchMovie()"
-              />
-            </div>
-            <button class="button-search" @click="searchMovie()">Search</button>
           </div>
         </div>
       </div>
@@ -58,7 +69,7 @@
           <div>
             <h2 class="catalog-title">Catalogue</h2>
           </div>
-
+          <!-- Pagination top -->
           <div class="catalog-pagination-line">
             <div>
               <i
@@ -84,7 +95,7 @@
               ></i>
             </div>
           </div>
-
+          <!-- View change -->
           <div class="catalog-views">
             <p class="catalog-views-text">views</p>
             <i
@@ -99,9 +110,11 @@
             ></i>
           </div>
         </div>
+        <!-- Empty state -->
         <div v-if="movies.length == 0">
           <p>No movies found ):</p>
         </div>
+        <!-- View 0 cards type 1 -->
         <div class="catlog-cards1" v-if="viewSelected == 0">
           <div
             class="catalog-card1"
@@ -113,28 +126,24 @@
               <img :src="movie.poster_path" alt />
             </div>
             <div class="catalog-card1-info-space">
-              <h2>{{movie.title}}</h2>
-              <p class="catalog-card1-info-text">
-                <b>Overview:</b>
-                {{movie.overview}}
-              </p>
+              <div>
+                <h2>{{movie.title}}</h2>
+                <p class="catalog-card1-info-text">
+                  <b>Overview:</b>
+                  {{movie.overview}}
+                </p>
+              </div>
+              <button class="button-card card1">Add to list</button>
             </div>
           </div>
         </div>
+        <!-- View 1 cards type 2 -->
         <div class="catlog-cards2" v-if="viewSelected == 1">
           <div class="catlog-card" v-for="movie in movies" :key="movie.id">
-            <div @click="goToMovie(movie.id)">
-              <div class="movie-card-info">
-                <img class="catalog-card-image" :src="movie.poster_path" alt />
-                <div class="overlay">
-                  <p class="text-overlay">rating: {{movie.vote_average}}</p>
-                  <p class="text-overlay">{{movie.release_date}}</p>
-                </div>
-              </div>
-              <h2 class="movie-card-title">{{movie.title}}</h2>
-            </div>
+            <Card :movie="movie" />
           </div>
         </div>
+        <!-- Pagination bottom -->
         <div class="catalog-pagination-line">
           <div>
             <i
@@ -173,6 +182,8 @@ import { getMoviesAdvancedSearch, getMoviesByName } from "../API/apiDiscover";
 import { getAllGenres } from "../API/apiGenre";
 // Mixin
 import GoToMovie from "../components/mixins/goToMovie";
+// Component
+import Card from "../components/Card.vue";
 
 interface movieType {
   overview: string;
@@ -190,7 +201,9 @@ interface genreType {
 }
 
 @Component({
-  components: {},
+  components: {
+    Card
+  },
   mixins: [GoToMovie]
 })
 export default class Catalog extends Vue {
@@ -239,7 +252,7 @@ export default class Catalog extends Vue {
 
     //Api request
     const query = "&query=" + this.nameSearch + "&page=" + this.currentPage;
-    console.log(query);
+
     getMoviesByName(query).then(response => {
       this.movies = response.data.results;
       this.totalPages = response.data.total_pages;
@@ -263,6 +276,7 @@ export default class Catalog extends Vue {
   }
 
   public getMovies(): void {
+    // Query and verifications
     let query =
       "&sort_by=" +
       this.sortSelected +
@@ -289,18 +303,16 @@ export default class Catalog extends Vue {
         // Correct the path
         this.movies[i].poster_path =
           "https://image.tmdb.org/t/p/w500" + this.movies[i].poster_path;
-
+        // Overview under 300 chars
         if (this.movies[i].overview.length >= 300) {
           this.movies[i].overview =
             this.movies[i].overview.substr(0, 300) + "...";
         }
-
+        // Title under 32 chars
         if (this.movies[i].title.length >= 32) {
           this.movies[i].title = this.movies[i].title.substr(0, 32) + "...";
         }
       }
-
-      console.log(response.data);
     });
   }
 
@@ -310,7 +322,7 @@ export default class Catalog extends Vue {
     this.currentPage = 1;
     this.getMovies();
   }
-
+  // Previous page
   public goToPrevious(): void {
     if (this.currentPage > 1) {
       this.currentPage -= 1;
@@ -321,7 +333,7 @@ export default class Catalog extends Vue {
       }
     }
   }
-
+  // Next page
   public goToNext(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage += 1;
@@ -332,9 +344,8 @@ export default class Catalog extends Vue {
       }
     }
   }
-
+  // If type page number
   public goToPage(): void {
-    console.log(this.currentPage);
     if (this.currentPage >= 1 && this.currentPage <= this.totalPages) {
       if (this.searchSelected == 0) {
         this.getMovies();

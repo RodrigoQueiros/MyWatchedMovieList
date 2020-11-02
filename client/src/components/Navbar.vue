@@ -1,13 +1,16 @@
 <template>
   <div class="navbar">
     <div class="container">
-      <a href class="navbar-logo-a">
+      <!-- Icon -->
+      <a class="navbar-logo-a">
         <img @click="goToPage('Home')" src="../assets/logo.png" alt="logo vono" class="navbar-logo" />
       </a>
+      <!-- Burger menu -->
       <input class="menu-btn" type="checkbox" id="menu-btn" v-model="checked" />
       <label class="menu-icon" for="menu-btn">
         <span class="navicon"></span>
       </label>
+      <!-- Links -->
       <ul class="navbar-menu">
         <li class="navbar-menu-element">
           <a class="navbar-menu-link" @click="goToPage('Home')">Home</a>
@@ -39,8 +42,7 @@ import GoToPage from "../components/mixins/goToPage";
 @Component({
   mixins: [GoToPage]
 })
-export default class Navbar extends Vue {
-}
+export default class Navbar extends Vue {}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

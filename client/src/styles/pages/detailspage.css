@@ -47,6 +47,7 @@
 
 .recommend-movies-title {
   margin-top: 100px;
+  margin-bottom: 30px;
   text-align: center;
   font-size: 40px;
 }
@@ -108,6 +109,10 @@
   .details-button > button {
     font-size: 20px;
   }
+
+  .movie-cards > h3 {
+    font-size: 35px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -157,5 +162,9 @@
 
   .details-movie-text > p {
     font-size: 16px;
+  }
+
+  .movie-cards > h3 {
+    font-size: 28px;
   }
 }

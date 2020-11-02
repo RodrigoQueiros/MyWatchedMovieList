@@ -1,15 +1,15 @@
 .categories {
-  margin: 100px 200px;
+  margin: 100px auto;
 }
 
 .categories-header {
   text-align: center;
-  margin: 200px 0 100px 0;
+  margin: 200px auto 100px auto;
 }
 
 .categories-name {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   grid-gap: 40px;
 }
 
@@ -74,7 +74,7 @@
   }
 
   .categories-name {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); */
     grid-gap: 30px;
   }
 
@@ -89,7 +89,7 @@
   }
 
   .categories-name {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
     grid-gap: 20px;
   }
 

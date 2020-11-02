@@ -1,6 +1,5 @@
 .random-movie {
   margin: 200px 0 100px 0;
-  min-height: calc(100vh - 70px - 630px); /*  100vh - navbar - footer*/
 }
 
 .random-movie-card {

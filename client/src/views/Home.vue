@@ -54,50 +54,17 @@
     <!-- Cards -->
     <div class="movie-cards" v-if="sortingSelected == 'mostPopular'">
       <div class="movie-card" v-for="movie in popularMovies" :key="movie.id">
-        <div>
-          <div class="movie-card-info">
-            <img class="movie-card-image" :src="movie.poster_path" alt @click="goToMovie(movie.id)" />
-            <div class="overlay">
-              <p class="text-overlay">rating: {{movie.vote_average}}</p>
-              <p class="text-overlay">{{movie.release_date}}</p>
-            </div>
-          </div>
-          <div class="card-title-space">
-            <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
-          </div>
-        </div>
+        <Card :movie="movie" />
       </div>
     </div>
     <div class="movie-cards" v-if="sortingSelected == 'topRated'">
       <div class="movie-card" v-for="movie in topMovies" :key="movie.id">
-        <div @click="goToMovie(movie.id)">
-          <div class="movie-card-info">
-            <img class="movie-card-image" :src="movie.poster_path" alt />
-            <div class="overlay">
-              <p class="text-overlay">rating: {{movie.vote_average}}</p>
-              <p class="text-overlay">{{movie.release_date}}</p>
-            </div>
-          </div>
-          <div class="card-title-space">
-            <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
-          </div>
-        </div>
+        <Card :movie="movie" />
       </div>
     </div>
     <div class="movie-cards" v-if="sortingSelected == 'upcoming'">
       <div class="movie-card" v-for="movie in upcomingMovies" :key="movie.id">
-        <div @click="goToMovie(movie.id)">
-          <div class="movie-card-info">
-            <img class="movie-card-image" :src="movie.poster_path" alt />
-            <div class="overlay">
-              <p class="text-overlay">rating: {{movie.vote_average}}</p>
-              <p class="text-overlay">{{movie.release_date}}</p>
-            </div>
-          </div>
-          <div class="card-title-space">
-            <h2 class="movie-card-title" @click="goToMovie(movie.id)">{{movie.title}}</h2>
-          </div>
-        </div>
+        <Card :movie="movie" />
       </div>
     </div>
   </div>
@@ -115,6 +82,8 @@ import {
 import { Component, Vue } from "vue-property-decorator";
 // Mixin
 import GoToMovie from "../components/mixins/goToMovie";
+// Component
+import Card from "../components/Card.vue";
 
 interface movieType {
   overview: string;
@@ -127,7 +96,9 @@ interface movieType {
 }
 
 @Component({
-  components: {},
+  components: {
+    Card
+  },
   mixins: [GoToMovie]
 })
 export default class Home extends Vue {
@@ -164,7 +135,6 @@ export default class Home extends Vue {
           }
           // Add minutes to the runtime
           this.movieTrending[i].runtime = this.movieTrending[i].runtime + " m";
-          console.log(this.movieTrending);
         }
       });
     });

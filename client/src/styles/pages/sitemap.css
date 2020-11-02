@@ -6,10 +6,11 @@
 .sitemap-header {
   text-align: center;
   margin: 200px 0 100px 0;
+  font-size: 4vw;
 }
 
 .sitemap-space {
-  width: 1000px;
+  width: 500px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -18,14 +19,14 @@
 
 .sitemap-text {
   cursor: pointer;
-  font-size: 20px;
+  font-size: 2.1vw;
   line-height: 30px;
   color: #840012;
   transition: all 0.2ms ease-in-out;
 }
 
 .sitemap-text.secondary {
-  font-size: 20px;
+  font-size: 2.1vw;
   line-height: 28px;
   color: #ffb052;
   margin-left: 20px;
@@ -36,4 +37,56 @@
 }
 .sitemap-text:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 1000px) {
+  .margin-top {
+    margin-top: 750px;
+  }
+
+  .sitemap {
+    margin: 100px 100px;
+  }
+
+  .sitemap-header {
+    margin: 100px 0 50px 0;
+  }
+
+  .sitemap-header {
+    font-size: 5vw;
+  }
+
+  .sitemap-text {
+    font-size: 3.1vw;
+  }
+
+  .sitemap-text.secondary {
+    font-size: 3.1vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .sitemap {
+    margin: 100px 50px;
+  }
+
+  .sitemap-header {
+    margin: 100px 0 40px 0;
+  }
+
+  .sitemap-space {
+    width: auto;
+  }
+
+  .sitemap-header {
+    font-size: 5.5vw;
+  }
+
+  .sitemap-text {
+    font-size: 3.7vw;
+  }
+
+  .sitemap-text.secondary {
+    font-size: 3.7vw;
+  }
 }

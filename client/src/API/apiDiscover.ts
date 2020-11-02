@@ -19,7 +19,6 @@ export function getMoviesAdvancedSearch(body: string) {
 }
 
 export function getMoviesByName(body: string) {
-  console.log(body);
   return get(
     '/search/movie?api_key=' +
       process.env.VUE_APP_API_KEY +

@@ -2,9 +2,11 @@
   <div class="footer">
     <div class="container">
       <div class="footer-flex">
+        <!-- Photo -->
         <div class="image-center">
           <img class="footer-image" src="../assets/footer-photo.png" alt />
         </div>
+        <!-- Text -->
         <div class="footer-developer">
           <p class="footer-developer-name">
             My name is
@@ -23,6 +25,7 @@
             more and improve in this field.
           </p>
         </div>
+        <!-- Links -->
         <div class="footer-contact">
           <a
             class="footer-link"
@@ -50,6 +53,7 @@
           </a>
         </div>
       </div>
+      <!-- Bottom links -->
       <div class="footer-bottom">
         <p class="footer-link-text">
           <a href="mailto:rodrigoqueiros.nl@gmail.com" target="_blank">rodrigoqueiros.nl@gmail.com</a> ●

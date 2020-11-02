@@ -1,13 +1,14 @@
 <template>
   <div class="app">
     <Navbar />
-
+    <!-- No container limitations on login/signup -->
     <div class="container margin-top" v-if="notLogin != 'Login' && notLogin != 'Signup'">
-      <router-view />
+      <router-view class="min-height" />
     </div>
     <div class="margin-top" v-else>
       <router-view />
     </div>
+    <!-- No footer in login/signup -->
     <div v-if="notLogin != 'Login' && notLogin != 'Signup'">
       <Footer />
     </div>
