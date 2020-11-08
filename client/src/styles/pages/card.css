@@ -109,6 +109,14 @@
   transition: all 0.4s ease-in-out;
 }
 
+.button-card.remove {
+  background-color: #840012;
+}
+
+.button-search.remove {
+  background-color: #840012;
+}
+
 @media (max-width: 1250px) {
   .movie-cards {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

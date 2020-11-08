@@ -5,7 +5,16 @@
         <!-- Image and button -->
         <img :src="movie.poster_path" class="details-movie-image" />
         <div class="details-button up">
-          <button class="button-search">Add to list</button>
+          <button
+            class="button-search"
+            @click="addToList()"
+            v-if="alreadyAdded == false"
+          >Add to list</button>
+          <button
+            class="button-search remove"
+            @click="removeFromList()"
+            v-else-if="alreadyAdded == true"
+          >Remove</button>
         </div>
       </div>
       <!-- Title and info -->
@@ -53,7 +62,12 @@
         </div>
       </div>
       <div class="details-button down">
-        <button class="button-search">Add to list</button>
+        <button class="button-search" @click="addToList()" v-if="alreadyAdded == false">Add to list</button>
+        <button
+          class="button-search remove"
+          @click="removeFromList()"
+          v-else-if="alreadyAdded == true"
+        >Remove</button>
       </div>
     </div>
     <!-- Recomend 1 based on the movie -->
@@ -141,6 +155,7 @@ interface genreType {
 })
 export default class DetailsPage extends Vue {
   private movieId: string = "";
+  private alreadyAdded: boolean = false;
   private movie: movieModel = {
     overview: "",
     title: "",
@@ -180,20 +195,33 @@ export default class DetailsPage extends Vue {
       this.randomGenre = this.movie.genres[
         Math.floor(Math.random() * this.movie.genres.length)
       ];
-      getMoviesByGenreId(this.randomGenre.id.toString()).then(response => {
-        this.recommendedMoviesbyGenre = response.data.results.slice(0, 3);
-        for (let i = 0; i < 3; i++) {
-          // Correct the path
-          this.recommendedMoviesbyGenre[i].poster_path =
-            "https://image.tmdb.org/t/p/w500" +
-            this.recommendedMoviesbyGenre[i].poster_path;
-          // Limit the number of chars in the title
-          if (this.recommendedMoviesbyGenre[i].title.length >= 32) {
-            this.recommendedMoviesbyGenre[i].title =
-              this.recommendedMoviesbyGenre[i].title.substr(0, 32) + "...";
+      //Button state
+      this.alreadyAdded = false;
+      let local = localStorage.getItem("watch-list");
+      if (local) {
+        let obj = JSON.parse(local);
+
+        for (let i = 0; i < obj.length; i++) {
+          if (obj[i].id == this.movie.id) {
+            this.alreadyAdded = true;
           }
         }
-      });
+
+        getMoviesByGenreId(this.randomGenre.id.toString()).then(response => {
+          this.recommendedMoviesbyGenre = response.data.results.slice(0, 3);
+          for (let i = 0; i < 3; i++) {
+            // Correct the path
+            this.recommendedMoviesbyGenre[i].poster_path =
+              "https://image.tmdb.org/t/p/w500" +
+              this.recommendedMoviesbyGenre[i].poster_path;
+            // Limit the number of chars in the title
+            if (this.recommendedMoviesbyGenre[i].title.length >= 32) {
+              this.recommendedMoviesbyGenre[i].title =
+                this.recommendedMoviesbyGenre[i].title.substr(0, 32) + "...";
+            }
+          }
+        });
+      }
     });
 
     getRecommendedMovieById(this.movieId).then(response => {
@@ -210,6 +238,44 @@ export default class DetailsPage extends Vue {
         }
       }
     });
+  }
+
+  public addToList(): void {
+    let tempMovie = {
+      title: this.movie.title,
+      poster_path: this.movie.poster_path,
+      vote_average: this.movie.vote_average,
+      id: this.movie.id,
+      watchState: "completed"
+    };
+
+    let local = localStorage.getItem("watch-list");
+    if (local) {
+      let obj = JSON.parse(local);
+      obj.push(tempMovie);
+      localStorage.setItem("watch-list", JSON.stringify(obj));
+    } else {
+      let temp = [];
+      temp.push(tempMovie);
+      localStorage.setItem("watch-list", JSON.stringify(temp));
+    }
+    this.alreadyAdded = true;
+  }
+
+  public removeFromList(): void {
+    let local = localStorage.getItem("watch-list");
+    if (local) {
+      let obj = JSON.parse(local);
+      console.log(obj);
+
+      for (let i = 0; i < obj.length; i++) {
+        if (obj[i].id == this.movie.id) {
+          obj.splice(i, 1);
+        }
+        this.alreadyAdded = false;
+      }
+      localStorage.setItem("watch-list", JSON.stringify(obj));
+    }
   }
 }
 </script>
