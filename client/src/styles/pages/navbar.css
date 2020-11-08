@@ -16,6 +16,7 @@
   display: block;
   float: left;
   z-index: 20;
+  cursor: pointer;
 }
 
 .navbar-logo-a {

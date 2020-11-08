@@ -49,7 +49,7 @@ const routes: RouteConfig[] = [
     name: "WatchList",
     component: WatchList,
     meta: {
-      requiresAuth: true
+      // requiresAuth: true
     }
   },
   {

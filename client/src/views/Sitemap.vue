@@ -8,7 +8,7 @@
       <a class="sitemap-text first" @click="goToPage('Categories')">● Categories</a>
       <a class="sitemap-text first" @click="goToPage('RandomMovie')">● Random movie</a>
       <a class="sitemap-text first" @click="goToPage('Login')">● Login</a>
-      <a class="sitemap-text secondary" @click="goToPage('Signup')">● Sign p</a>
+      <a class="sitemap-text secondary" @click="goToPage('Signup')">● Sign up</a>
       <a class="sitemap-text first" @click="goToPage('WatchList')">● Watch List</a>
       <a class="sitemap-text first" @click="goToPage('Sitemap')">● Sitemap</a>
     </div>

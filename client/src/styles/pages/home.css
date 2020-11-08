@@ -133,6 +133,22 @@
   color: #840012;
 }
 
+/* Hero animation */
+.fade-enter-active {
+  animation: fade-in 1s;
+}
+
+@keyframes fade-in {
+  0% {
+    transform: translateY(20px);
+    opacity: 0%;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 100%;
+  }
+}
+
 /* Media queries */
 
 @media (min-width: 1920px) {
