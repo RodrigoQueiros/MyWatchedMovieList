@@ -12,14 +12,14 @@
       @mouseleave="pauseInterval = false"
     >
       <div class="hero-gradient">
-        <img class="hero-wallpaper" :src="movie.src" alt />
+        <img class="hero-wallpaper" :src="movie.src" alt="Movie trending" />
       </div>
 
       <span class="hero-content">
         <h2 class="hero-trending-header">Trending</h2>
         <transition name="fade" mode="out-in">
           <div class="flex-container" v-show="movieTrendingShow==i">
-            <img :src="movie.poster_path" alt class="hero-trending-image" />
+            <img :src="movie.poster_path" alt="Movie poster trending" class="hero-trending-image" />
             <div class="hero-trending-info">
               <h1 class="hero-trending-title">{{movie.original_title}}</h1>
               <p class="hero-trending-text">{{movie.overview}}</p>
@@ -123,60 +123,59 @@ export default class Home extends Vue {
       getMovieDetailsById("299536").then(response => {
         response.data.src = "https://image.ibb.co/fvCZ3G/EMH1.jpg";
         this.movieTrending.push(response.data);
-        for (let i = 0; i < this.movieTrending.length; i++) {
+
+        this.movieTrending.forEach((movie, i) => {
           // Add the missing part to the poster image link
           this.movieTrending[i].poster_path =
-            "https://image.tmdb.org/t/p/w500" +
-            this.movieTrending[i].poster_path;
+            "https://image.tmdb.org/t/p/w500" + movie.poster_path;
           // Limit the number of chars in the overview
-          if (this.movieTrending[i].overview.length >= 270) {
+          if (movie.overview.length >= 270) {
             this.movieTrending[i].overview =
-              this.movieTrending[i].overview.substr(0, 270) + "...";
+              movie.overview.substr(0, 270) + "...";
           }
           // Add minutes to the runtime
-          this.movieTrending[i].runtime = this.movieTrending[i].runtime + " m";
-        }
+          this.movieTrending[i].runtime = movie.runtime + " m";
+        });
       });
     });
     // Get popular movies
     getPopularMovies().then(response => {
       this.popularMovies = response.data.results.slice(0, 10);
-      for (let i = 0; i < 10; i++) {
+
+      this.popularMovies.forEach((movie, i) => {
         // Correct the path
         this.popularMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + this.popularMovies[i].poster_path;
+          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
         // Limit the number of chars in the title
-        if (this.popularMovies[i].title.length >= 32) {
-          this.popularMovies[i].title =
-            this.popularMovies[i].title.substr(0, 32) + "...";
+        if (movie.title.length >= 32) {
+          this.popularMovies[i].title = movie.title.substr(0, 32) + "...";
         }
-      }
+      });
     });
 
     getTopMovies().then(response => {
       this.topMovies = response.data.results.slice(0, 10);
-      for (let i = 0; i < 10; i++) {
+
+      this.topMovies.forEach((movie, i) => {
         this.topMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + this.topMovies[i].poster_path;
-        if (this.topMovies[i].title.length >= 32) {
-          this.topMovies[i].title =
-            this.topMovies[i].title.substr(0, 32) + "...";
+          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+        if (movie.title.length >= 32) {
+          this.topMovies[i].title = movie.title.substr(0, 32) + "...";
         }
-      }
+      });
     });
 
     getUpcomingMovies().then(response => {
       this.upcomingMovies = response.data.results.slice(0, 10);
-      for (let i = 0; i < 10; i++) {
-        this.upcomingMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" +
-          this.upcomingMovies[i].poster_path;
 
-        if (this.upcomingMovies[i].title.length >= 32) {
-          this.upcomingMovies[i].title =
-            this.upcomingMovies[i].title.substr(0, 32) + "...";
+      this.upcomingMovies.forEach((movie, i) => {
+        this.upcomingMovies[i].poster_path =
+          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+
+        if (movie.title.length >= 32) {
+          this.upcomingMovies[i].title = movie.title.substr(0, 32) + "...";
         }
-      }
+      });
     });
     // Change hero movie each 5s
     setInterval(() => {

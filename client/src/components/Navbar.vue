@@ -3,7 +3,7 @@
     <div class="container">
       <!-- Icon -->
       <a class="navbar-logo-a">
-        <img @click="goToPage('Home')" src="../assets/logo.png" alt="logo vono" class="navbar-logo" />
+        <img @click="goToPage('Home')" src="../assets/logo.png" alt="Page logo" class="navbar-logo" />
       </a>
       <!-- Burger menu -->
       <input class="menu-btn" type="checkbox" id="menu-btn" v-model="checked" />

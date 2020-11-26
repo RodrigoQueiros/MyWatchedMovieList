@@ -7,25 +7,31 @@
           <h2 class="catalog-title">Advanced Search</h2>
           <div class="catalog-search">
             <!-- Search by name -->
-            <div class="search-by-name-input">
+            <form class="search-by-name-input">
               <label for="search-by-name" class="search-label">Search for movie name</label>
               <input
                 class="search-input"
                 type="text"
                 placeholder="Search by name"
                 name="search-by-name-input"
+                id="search-by-name"
                 v-model="nameSearch"
                 v-on:keyup.enter="getMoviesByName()"
               />
               <div class="flex">
                 <button class="button-search" @click="getMoviesByName()">Search</button>
               </div>
-            </div>
-            <div>
+            </form>
+            <form>
               <!-- Sort by -->
               <div class="search-sorting">
                 <label for="search-sorting-input" class="search-label">Sort by</label>
-                <select v-model="sortSelected" name="search-sorting-input" class="select-input">
+                <select
+                  v-model="sortSelected"
+                  name="search-sorting-input"
+                  id="search-sorting-input"
+                  class="select-input"
+                >
                   <option disabled value>Select one</option>
                   <option value="popularity.asc">Popularity Asc</option>
                   <option value="popularity.desc">Popularity Desc</option>
@@ -40,7 +46,12 @@
               <!-- Sort by genre -->
               <div class="search-by-genre">
                 <label for="search-genre-input" class="search-label">Genre</label>
-                <select v-model="genreSelected" name="search-genre-input" class="select-input">
+                <select
+                  v-model="genreSelected"
+                  name="search-genre-input"
+                  id="search-genre-input"
+                  class="select-input"
+                >
                   <option value>Not selected</option>
                   <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{genre.name}}</option>
                 </select>
@@ -53,6 +64,7 @@
                   type="text"
                   placeholder="Search by year [1990-2020]"
                   name="search-year-input"
+                  id="search-year-input"
                   v-model="yearInput"
                   v-on:keyup.enter="searchMovie()"
                 />
@@ -60,7 +72,7 @@
               <div class="flex">
                 <button class="button-search" @click="searchMovie()">Search</button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -123,7 +135,7 @@
             @click="goToMovie(movie.id)"
           >
             <div class="catalog-card1-img-space">
-              <img :src="movie.poster_path" alt />
+              <img :src="movie.poster_path" alt="Movie Poster" />
             </div>
             <div class="catalog-card1-info-space">
               <div>
@@ -257,21 +269,20 @@ export default class Catalog extends Vue {
       this.movies = response.data.results;
       this.totalPages = response.data.total_pages;
 
-      for (let i = 0; i < 20; i++) {
+      this.movies.forEach((movie, i) => {
         // Correct the path
         this.movies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + this.movies[i].poster_path;
+          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
 
         //If overview length to big, reduce it
-        if (this.movies[i].overview.length >= 300) {
-          this.movies[i].overview =
-            this.movies[i].overview.substr(0, 300) + "...";
+        if (movie.overview.length >= 300) {
+          this.movies[i].overview = movie.overview.substr(0, 300) + "...";
         }
         //If title length to big, reduce it
-        if (this.movies[i].title.length >= 32) {
-          this.movies[i].title = this.movies[i].title.substr(0, 32) + "...";
+        if (movie.title.length >= 32) {
+          this.movies[i].title = movie.title.substr(0, 32) + "...";
         }
-      }
+      });
     });
   }
 
@@ -299,20 +310,21 @@ export default class Catalog extends Vue {
     getMoviesAdvancedSearch(query).then(response => {
       this.movies = response.data.results;
       this.totalPages = response.data.total_pages;
-      for (let i = 0; i < 20; i++) {
+
+      this.movies.forEach((movie, i) => {
         // Correct the path
         this.movies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + this.movies[i].poster_path;
-        // Overview under 300 chars
-        if (this.movies[i].overview.length >= 300) {
-          this.movies[i].overview =
-            this.movies[i].overview.substr(0, 300) + "...";
+          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+
+        //If overview length to big, reduce it
+        if (movie.overview.length >= 300) {
+          this.movies[i].overview = movie.overview.substr(0, 300) + "...";
         }
-        // Title under 32 chars
-        if (this.movies[i].title.length >= 32) {
-          this.movies[i].title = this.movies[i].title.substr(0, 32) + "...";
+        //If title length to big, reduce it
+        if (movie.title.length >= 32) {
+          this.movies[i].title = movie.title.substr(0, 32) + "...";
         }
-      }
+      });
     });
   }
 

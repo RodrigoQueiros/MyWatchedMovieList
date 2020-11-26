@@ -1,68 +1,43 @@
 <template>
   <div class="random-movie">
-    <div class="random-movie-card">
-      <h2 class="random-movie-title">{{movie.title}}</h2>
-      <img :src="movie.poster_path" alt class="random-movie-img" />
-      <div class="card-content">
-        <p class="card-content-overview">{{movie.overview}}</p>
+    <template v-if="!loading">
+      <div class="random-movie-card">
+        <h2 class="random-movie-title">{{movie.title}}</h2>
+        <img :src="movie.poster_path" alt="Movie poster" class="random-movie-img" />
+        <div class="card-content">
+          <p class="card-content-overview">{{movie.overview}}</p>
+        </div>
+        <div class="buttons">
+          <a class="btn" @click="goToMovie(movie.id)">Details</a>
+          <a class="btn" @click="randomMovie()">Random Movie</a>
+        </div>
       </div>
-      <div class="buttons">
-        <a class="btn" @click="goToMovie(movie.id)">Details</a>
-        <a class="btn" @click="randomMovie()">Random Movie</a>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 // TS
 import { Component, Vue } from "vue-property-decorator";
-// Axios
-import { getRandomMovie } from "../API/apiMovie";
 // Mixin
 import GoToMovie from "../components/mixins/goToMovie";
-
-interface movieModel {
-  overview: string;
-  title: string;
-  poster_path: string;
-  runtime: string;
-  vote_average: number;
-  id: number;
-  src: string;
-}
 
 @Component({
   components: {},
   mixins: [GoToMovie]
 })
 export default class DetailsPage extends Vue {
-  private movie: movieModel = {
-    overview: "",
-    title: "",
-    poster_path: "",
-    runtime: "",
-    vote_average: 0,
-    id: 0,
-    src: ""
-  };
+  private movie = this.$store.state.randomMovie;
+  private loading: boolean = true;
 
-  public created() {
-    this.randomMovie();
+  public async created() {
+    await this.randomMovie();
   }
 
-  private randomMovie(): void {
-    // Random between 1 and 500 (pages)
-    const num1 = Math.floor(Math.random() * 499) + 1;
-    // Random between 0 and 19 (items in one page)
-    const num2 = Math.floor(Math.random() * 20);
-
-    getRandomMovie(num1.toString()).then(response => {
-      this.movie = response.data.results[num2];
-
-      this.movie.poster_path =
-        "https://image.tmdb.org/t/p/w500" + this.movie.poster_path;
-    });
+  private async randomMovie() {
+    await this.$store.dispatch("getRandomMovie");
+    this.movie = this.$store.state.randomMovie;
+    this.loading = false;
   }
 }
 </script>

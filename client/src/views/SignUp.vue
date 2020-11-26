@@ -1,35 +1,36 @@
 <template>
   <div class="login">
     <div class="signup-box">
-      <div class="signup-box-left">
+      <form class="signup-box-left">
         <h3>Sign up</h3>
-        <label for="search-by-name" class="search-label">Name</label>
+        <label for="input-signup-name" class="search-label">Name</label>
         <input
           class="search-input"
           type="text"
           placeholder="Search by name"
-          name="search-by-name-input"
+          id="input-signup-name"
+          name="input-signup-name"
           v-on:keyup.enter="getMoviesByName()"
         />
-        <label for="search-by-name" class="search-label">Email</label>
+        <label for="input-signup-email" class="search-label">Email</label>
         <input
           class="search-input"
           type="text"
           placeholder="Search by name"
-          name="search-by-name-input"
+          id="input-signup-email"
           v-on:keyup.enter="getMoviesByName()"
         />
 
-        <label for="search-by-name" class="search-label">Password</label>
+        <label for="input-signup-password" class="search-label">Password</label>
         <input
           class="search-input"
           type="password"
           placeholder="Search by name"
-          name="search-by-name-input"
+          id="input-signup-password"
           v-on:keyup.enter="getMoviesByName()"
         />
         <button class="button-search" @click="goToPage('Home')">Sign up</button>
-      </div>
+      </form>
       <div class="signup-box-right">
         <h3 class="color-white center-text">Already have an account?</h3>
         <p class="color-white center-text login-text">

@@ -78,7 +78,7 @@
         <div class="movie-card" v-for="movie in recommendedMovies" :key="movie.id">
           <div class="card">
             <div class="movie-card-info">
-              <img class="movie-card-image" :src="movie.poster_path" alt />
+              <img class="movie-card-image" :src="movie.poster_path" alt="Movie poster" />
               <div class="overlay" @click="goToMovie(movie.id)">
                 <p class="text-overlay">{{movie.vote_average}}</p>
                 <button class="button-card">Add to list</button>
@@ -97,7 +97,7 @@
         <div class="movie-card" v-for="movie in recommendedMoviesbyGenre" :key="movie.id">
           <div class="card">
             <div class="movie-card-info">
-              <img class="movie-card-image" :src="movie.poster_path" alt />
+              <img class="movie-card-image" :src="movie.poster_path" alt="Movie poster" />
               <div class="overlay" @click="goToMovie(movie.id)">
                 <p class="text-overlay">{{movie.vote_average}}</p>
                 <button class="button-card">Add to list</button>
@@ -147,6 +147,13 @@ interface movieType {
 
 interface genreType {
   name: string;
+  id: number;
+}
+interface watchListModel {
+  title: string;
+  poster_path: string;
+  vote_average: number;
+  watchState: string;
   id: number;
 }
 
@@ -201,42 +208,41 @@ export default class DetailsPage extends Vue {
       if (local) {
         let obj = JSON.parse(local);
 
-        for (let i = 0; i < obj.length; i++) {
-          if (obj[i].id == this.movie.id) {
+        obj.forEach((element: watchListModel) => {
+          if (element.id == this.movie.id) {
             this.alreadyAdded = true;
           }
-        }
+        });
 
         getMoviesByGenreId(this.randomGenre.id.toString()).then(response => {
           this.recommendedMoviesbyGenre = response.data.results.slice(0, 3);
-          for (let i = 0; i < 3; i++) {
+
+          this.recommendedMoviesbyGenre.forEach((genre, i) => {
             // Correct the path
             this.recommendedMoviesbyGenre[i].poster_path =
-              "https://image.tmdb.org/t/p/w500" +
-              this.recommendedMoviesbyGenre[i].poster_path;
+              "https://image.tmdb.org/t/p/w500" + genre.poster_path;
             // Limit the number of chars in the title
-            if (this.recommendedMoviesbyGenre[i].title.length >= 32) {
+            if (genre.title.length >= 32) {
               this.recommendedMoviesbyGenre[i].title =
-                this.recommendedMoviesbyGenre[i].title.substr(0, 32) + "...";
+                genre.title.substr(0, 32) + "...";
             }
-          }
+          });
         });
       }
     });
 
     getRecommendedMovieById(this.movieId).then(response => {
       this.recommendedMovies = response.data.results.slice(0, 3);
-      for (let i = 0; i < 3; i++) {
+
+      this.recommendedMovies.forEach((movie, i) => {
         // Correct the path
         this.recommendedMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" +
-          this.recommendedMovies[i].poster_path;
+          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
         // Limit the number of chars in the title
-        if (this.recommendedMovies[i].title.length >= 32) {
-          this.recommendedMovies[i].title =
-            this.recommendedMovies[i].title.substr(0, 32) + "...";
+        if (movie.title.length >= 32) {
+          this.recommendedMovies[i].title = movie.title.substr(0, 32) + "...";
         }
-      }
+      });
     });
   }
 
@@ -268,12 +274,13 @@ export default class DetailsPage extends Vue {
       let obj = JSON.parse(local);
       console.log(obj);
 
-      for (let i = 0; i < obj.length; i++) {
-        if (obj[i].id == this.movie.id) {
+      obj.forEach((element: watchListModel, i: number) => {
+        if (element.id == this.movie.id) {
           obj.splice(i, 1);
         }
         this.alreadyAdded = false;
-      }
+      });
+
       localStorage.setItem("watch-list", JSON.stringify(obj));
     }
   }

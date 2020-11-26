@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="movie-card-info">
-      <img class="movie-card-image" :src="movie.poster_path" alt />
+      <img class="movie-card-image" :src="movie.poster_path" alt="movie poster" />
       <!-- Overlay on hover @click="goToMovie(movie.id)"-->
       <div class="overlay">
         <p class="text-overlay">{{movie.vote_average}}</p>
@@ -34,6 +34,14 @@ interface movieModel {
   src: string;
 }
 
+interface watchListModel {
+  title: string;
+  poster_path: string;
+  vote_average: number;
+  watchState: string;
+  id: number;
+}
+
 @Component({
   mixins: [GoToMovie]
 })
@@ -46,11 +54,13 @@ export default class Card extends Vue {
     if (local) {
       let obj = JSON.parse(local);
 
-      for (let i = 0; i < obj.length; i++) {
-        if (obj[i].id == this.movie.id) {
+      //This foreach was giving me problems with the type of variables not being identified
+      //after trying different methods, this was the first one that worked
+      obj.forEach((element: watchListModel, i: number) => {
+        if (element.id == this.movie.id) {
           this.alreadyAdded = true;
         }
-      }
+      });
     }
   }
 
@@ -80,14 +90,15 @@ export default class Card extends Vue {
     let local = localStorage.getItem("watch-list");
     if (local) {
       let obj = JSON.parse(local);
+
       console.log(obj);
 
-      for (let i = 0; i < obj.length; i++) {
-        if (obj[i].id == this.movie.id) {
+      obj.forEach((element: watchListModel, i: number) => {
+        if (element.id == this.movie.id) {
           obj.splice(i, 1);
         }
         this.alreadyAdded = false;
-      }
+      });
       localStorage.setItem("watch-list", JSON.stringify(obj));
     }
   }

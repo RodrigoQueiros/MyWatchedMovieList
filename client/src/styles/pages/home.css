@@ -116,7 +116,7 @@
 
 /* Sorting title */
 .sorting-titles {
-  margin: 80px 60px 0px 60px;
+  margin: 80px 60px 0 60px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -229,7 +229,7 @@
 
 @media (max-width: 1000px) {
   .sorting-titles {
-    margin: 60px 40px 0px 40px;
+    margin: 60px 40px 0 40px;
   }
 
   .sorting-title {
@@ -264,7 +264,7 @@
     grid-template-columns: auto auto;
     margin: 0 20px;
     background-color: white;
-    box-shadow: 0px 3px 6px #00000029;
+    box-shadow: 0 3px 6px #00000029;
     border-radius: 10px;
     padding: 20px;
   }
@@ -310,7 +310,7 @@
 
 @media (max-width: 670px) {
   .sorting-titles {
-    margin: 50px 20px 0px 20px;
+    margin: 50px 20px 0 20px;
   }
 
   .sorting-title {

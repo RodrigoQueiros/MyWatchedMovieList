@@ -26,6 +26,14 @@ interface watchType {
   watchState: string;
 }
 
+interface watchListModel {
+  title: string;
+  poster_path: string;
+  vote_average: number;
+  watchState: string;
+  id: number;
+}
+
 @Component({
   components: {
     Card
@@ -40,13 +48,13 @@ export default class Watchlist extends Vue {
     if (local) {
       let tempVar = JSON.parse(local);
 
-      for (let i = 0; i < tempVar.length; i++) {
-        if (tempVar[i].watchState == "completed") {
-          this.completed.push(tempVar[i]);
-        } else if (tempVar[i].watchState == "planToWatch") {
-          this.planToWatch.push(tempVar[i]);
+      tempVar.forEach((element: watchListModel) => {
+        if (element.watchState == "completed") {
+          this.completed.push(element);
+        } else if (element.watchState == "planToWatch") {
+          this.planToWatch.push(element);
         }
-      }
+      });
     }
   }
 }

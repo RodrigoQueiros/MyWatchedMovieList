@@ -9,7 +9,7 @@
   justify-items: center;
   grid-template-columns: 100%;
   background-color: white;
-  box-shadow: 0px 3px 6px #00000029;
+  box-shadow: 0 3px 6px #00000029;
   border-radius: 20px;
   padding: 30px 30px;
 }

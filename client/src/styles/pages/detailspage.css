@@ -10,7 +10,7 @@
 .card-details {
   width: 1000px;
   background-color: white;
-  box-shadow: 0px 3px 6px #00000029;
+  box-shadow: 0 3px 6px #00000029;
   border-radius: 20px;
   display: grid;
   grid-template-columns: 35% 65%;

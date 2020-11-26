@@ -11,27 +11,27 @@
         <a class="btn" @click="goToPage('Signup')">Create account</a>
       </div>
       <!-- Login side -->
-      <div class="login-box-right">
+      <form class="login-box-right">
         <h3>Login</h3>
-        <label for="search-by-name" class="search-label">Email</label>
+        <label for="input-login-email" class="search-label">Email</label>
         <input
           class="search-input"
           type="text"
           placeholder="Search by name"
-          name="search-by-name-input"
+          id="input-login-email"
           v-on:keyup.enter="getMoviesByName()"
         />
 
-        <label for="search-by-name" class="search-label">Password</label>
+        <label for="input-login-password" class="search-label">Password</label>
         <input
           class="search-input"
           type="password"
           placeholder="Search by name"
-          name="search-by-name-input"
+          id="input-login-password"
           v-on:keyup.enter="getMoviesByName()"
         />
         <button class="button-search" @click="goToPage('Home')">Login</button>
-      </div>
+      </form>
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@
       <div class="footer-flex">
         <!-- Photo -->
         <div class="image-center">
-          <img class="footer-image" src="../assets/footer-photo.png" alt />
+          <img class="footer-image" src="../assets/footer-photo.png" alt="Developer photo" />
         </div>
         <!-- Text -->
         <div class="footer-developer">
