@@ -6,6 +6,18 @@ export function correctPosterPath(path: string) {
   return "https://image.tmdb.org/t/p/w500" + path;
 }
 
+// Reduce overview length
+export function reduceOverviewLength(overview: string) {
+  if (overview.length >= 270) {
+    return overview.substr(0, 270) + "...";
+  } else return overview;
+}
+
+// Add minutes to time
+export function addMinutesToTime(runtime: string) {
+  return runtime + " m";
+}
+
 //Methods
 export function post(uri: string, data: string) {
   return axios.post(endpoint(uri), data);

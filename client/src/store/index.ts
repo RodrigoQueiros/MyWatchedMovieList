@@ -1,12 +1,37 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { CategoriesModel } from "./models/models";
-import { get, correctPosterPath } from "../utils/utils";
+import {
+  CategoriesModel,
+  WatchModel,
+  MovieModel,
+  BannerModel
+} from "./models/models";
+import {
+  get,
+  correctPosterPath,
+  reduceOverviewLength,
+  addMinutesToTime
+} from "../utils/utils";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    // Home page
+    bannerIds: [
+      {
+        id: "337401",
+        path:
+          "https://www.denofgeek.com/wp-content/uploads/2020/09/boycott-mulan-hero-image-2.png?fit=2000%2C500&resize=2000%2C500"
+      },
+      {
+        id: "299536",
+        path: "https://image.ibb.co/fvCZ3G/EMH1.jpg"
+      }
+    ],
+    bannerMovies: Array<MovieModel>(),
+    // Watch list
+    watchList: Array<WatchModel>(),
     // Random Movie
     randomMovie: {},
     // Categories
@@ -91,6 +116,21 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    // Home
+    GET_BANNERMOVIES(state, response) {
+      console.log(response);
+      response.map((movie: MovieModel) => {
+        movie.poster_path = correctPosterPath(response.poster_path);
+        console.log(2);
+        console.log(movie.poster_path);
+        movie.overview = reduceOverviewLength(response.overview);
+        movie.runtime = addMinutesToTime(response.runtime);
+      });
+
+      state.bannerMovies = response;
+      console.log(3);
+      console.log(state.bannerMovies);
+    },
     // Categories
     GET_CATEGORIES(state, response) {
       response.data.genres.forEach((genre: CategoriesModel, i: number) => {
@@ -108,9 +148,34 @@ export default new Vuex.Store({
       );
       state.randomMovie = response.data.results[num2];
       console.log(state.randomMovie);
+    },
+
+    // Watch list
+    GET_WATCHLIST(state, response) {
+      state.watchList = response;
     }
   },
   actions: {
+    // Home
+    async getBannerMovies({ commit, state }) {
+      console.log(state.bannerIds);
+      let tempVar: MovieModel[] = [];
+      state.bannerIds.forEach(async (movie: BannerModel) => {
+        await get(
+          "/movie/" +
+            movie.id +
+            "?api_key=" +
+            process.env.VUE_APP_API_KEY +
+            "&language=en-US"
+        ).then(result => {
+          result.data.src = movie.path;
+          tempVar.push(result.data);
+        });
+      });
+      console.log(1);
+      console.log(tempVar);
+      commit("GET_BANNERMOVIES", tempVar);
+    },
     // Categories
     async getCategories({ commit }) {
       await get(
@@ -135,6 +200,16 @@ export default new Vuex.Store({
       ).then(result => {
         commit("GET_RANDOMMOVIE", result);
       });
+    },
+    // Watch list
+    getWatchList({ commit }) {
+      let local = localStorage.getItem("watch-list");
+      if (local) {
+        let tempVar = JSON.parse(local);
+        commit("GET_WATCHLIST", tempVar);
+      } else {
+        commit("GET_WATCHLIST", []);
+      }
     }
   },
   modules: {}

@@ -104,7 +104,7 @@ interface movieType {
 export default class Home extends Vue {
   private pauseInterval: boolean = false;
   private movieTrendingShow: number = 0;
-  private movieTrending: movieType[] = [];
+  private movieTrending = [];
   private popularMovies: movieType[] = [];
   private topMovies: movieType[] = [];
   private upcomingMovies: movieType[] = [];
@@ -112,32 +112,11 @@ export default class Home extends Vue {
   // Css class
   private currentSorting: string = "current-sorting";
 
-  public created() {
+  public async created() {
     // Get movies for hero trending
-    getMovieDetailsById("337401").then(response => {
-      // Add outside background images
-      response.data.src =
-        "https://www.denofgeek.com/wp-content/uploads/2020/09/boycott-mulan-hero-image-2.png?fit=2000%2C500&resize=2000%2C500";
-      this.movieTrending.push(response.data);
+    await this.$store.dispatch("getBannerMovies");
+    this.movieTrending = this.$store.state.bannerMovies;
 
-      getMovieDetailsById("299536").then(response => {
-        response.data.src = "https://image.ibb.co/fvCZ3G/EMH1.jpg";
-        this.movieTrending.push(response.data);
-
-        this.movieTrending.forEach((movie, i) => {
-          // Add the missing part to the poster image link
-          this.movieTrending[i].poster_path =
-            "https://image.tmdb.org/t/p/w500" + movie.poster_path;
-          // Limit the number of chars in the overview
-          if (movie.overview.length >= 270) {
-            this.movieTrending[i].overview =
-              movie.overview.substr(0, 270) + "...";
-          }
-          // Add minutes to the runtime
-          this.movieTrending[i].runtime = movie.runtime + " m";
-        });
-      });
-    });
     // Get popular movies
     getPopularMovies().then(response => {
       this.popularMovies = response.data.results.slice(0, 10);

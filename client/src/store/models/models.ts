@@ -9,6 +9,20 @@ export interface MovieModel {
   src: string;
 }
 
+export interface BannerModel {
+  id: string;
+  path: string;
+}
+
+// Watch list
+export interface WatchModel {
+  title: string;
+  poster_path: string;
+  vote_average: number;
+  id: number;
+  watchState: string;
+}
+
 //  Categories
 export interface CategoriesModel {
   name: string;

@@ -45,7 +45,7 @@ const routes: RouteConfig[] = [
     component: SignUp
   },
   {
-    path: "/watchlist/:id",
+    path: "/watchlist",
     name: "WatchList",
     component: WatchList,
     meta: {

@@ -17,22 +17,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 // Component
 import Card from "../components/Card.vue";
-
-interface watchType {
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  id: number;
-  watchState: string;
-}
-
-interface watchListModel {
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  watchState: string;
-  id: number;
-}
+// Models
+import { WatchModel } from "../store/models/models";
 
 @Component({
   components: {
@@ -40,22 +26,21 @@ interface watchListModel {
   }
 })
 export default class Watchlist extends Vue {
-  private completed: watchType[] = [];
-  private planToWatch: watchType[] = [];
+  private watchList = [];
+  private completed: WatchModel[] = [];
 
-  public created() {
-    let local = localStorage.getItem("watch-list");
-    if (local) {
-      let tempVar = JSON.parse(local);
+  public async created() {
+    await this.$store.dispatch("getWatchList");
+    this.watchList = this.$store.state.watchList;
+    this.getCompleted();
+  }
 
-      tempVar.forEach((element: watchListModel) => {
-        if (element.watchState == "completed") {
-          this.completed.push(element);
-        } else if (element.watchState == "planToWatch") {
-          this.planToWatch.push(element);
-        }
-      });
-    }
+  private getCompleted() {
+    this.watchList.forEach((element: WatchModel) => {
+      if (element.watchState == "completed") {
+        this.completed.push(element);
+      }
+    });
   }
 }
 </script>

@@ -2,14 +2,14 @@
   <div class="app">
     <Navbar />
     <!-- No container limitations on login/signup -->
-    <div class="container margin-top" v-if="notLogin != 'Login' && notLogin != 'Signup'">
+    <div class="container margin-top" v-if="pageWithoutFooter">
       <router-view class="min-height" />
     </div>
     <div class="margin-top" v-else>
       <router-view />
     </div>
     <!-- No footer in login/signup -->
-    <div v-if="notLogin != 'Login' && notLogin != 'Signup'">
+    <div v-if="pageWithoutFooter">
       <Footer />
     </div>
   </div>
@@ -41,6 +41,10 @@ export default class App extends Vue {
     if (local) {
       this.notLogin = local;
     }
+  }
+  get pageWithoutFooter(): boolean {
+    if (this.notLogin != "Login" && this.notLogin != "Signup") return true;
+    else return false;
   }
 }
 </script>
