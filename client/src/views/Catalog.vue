@@ -189,28 +189,11 @@
 <script lang="ts">
 // TS
 import { Component, Vue } from "vue-property-decorator";
-// Axios
-import { getMoviesAdvancedSearch, getMoviesByName } from "../API/apiDiscover";
-import { getAllGenres } from "../API/apiGenre";
 // Mixin
 import GoToMovie from "../components/mixins/goToMovie";
 // Component
 import Card from "../components/Card.vue";
-
-interface movieType {
-  overview: string;
-  title: string;
-  poster_path: string;
-  runtime: string;
-  vote_average: number;
-  id: number;
-  src: string;
-}
-
-interface genreType {
-  name: string;
-  id: number;
-}
+import { MovieModel, GenreModel } from "../store/models/models";
 
 @Component({
   components: {
@@ -227,12 +210,12 @@ export default class Catalog extends Vue {
   private genreSelected: string = "";
   private yearInput: string = "";
   private nameSearch: string = "";
-  private genres: genreType[] = [];
-  private movies: movieType[] = [];
+  private genres: GenreModel[] = [];
+  private movies: MovieModel[] = [];
   //   Css class
   private selected: string = "view-selected";
   private notSelected: string = "view-not-selected";
-  public created() {
+  public async created() {
     // Get prefered view
     const local = localStorage.getItem("view");
     if (local) {
@@ -247,9 +230,8 @@ export default class Catalog extends Vue {
     this.getMovies();
 
     // Get all genres
-    getAllGenres().then(response => {
-      this.genres = response.data.genres;
-    });
+    await this.$store.dispatch("getAllGenres");
+    this.genres = this.$store.state.genres;
   }
 
   public changeView(changeTo: number): void {
@@ -258,35 +240,19 @@ export default class Catalog extends Vue {
     localStorage.setItem("view", changeTo.toString());
   }
 
-  public getMoviesByName(): void {
+  public async getMoviesByName() {
     //Search state 1-by name, 2-by sort,genre,year
     this.searchSelected = 1;
 
     //Api request
     const query = "&query=" + this.nameSearch + "&page=" + this.currentPage;
 
-    getMoviesByName(query).then(response => {
-      this.movies = response.data.results;
-      this.totalPages = response.data.total_pages;
-
-      this.movies.forEach((movie, i) => {
-        // Correct the path
-        this.movies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
-
-        //If overview length to big, reduce it
-        if (movie.overview.length >= 300) {
-          this.movies[i].overview = movie.overview.substr(0, 300) + "...";
-        }
-        //If title length to big, reduce it
-        if (movie.title.length >= 32) {
-          this.movies[i].title = movie.title.substr(0, 32) + "...";
-        }
-      });
-    });
+    await this.$store.dispatch("getMoviesByName", query);
+    this.movies = this.$store.state.catalogMovies;
+    this.totalPages = this.$store.state.totalPages;
   }
 
-  public getMovies(): void {
+  public async getMovies() {
     // Query and verifications
     let query =
       "&sort_by=" +
@@ -305,27 +271,11 @@ export default class Catalog extends Vue {
     ) {
       query = query + "&primary_release_year=" + this.yearInput;
     }
-
-    //Api request
-    getMoviesAdvancedSearch(query).then(response => {
-      this.movies = response.data.results;
-      this.totalPages = response.data.total_pages;
-
-      this.movies.forEach((movie, i) => {
-        // Correct the path
-        this.movies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
-
-        //If overview length to big, reduce it
-        if (movie.overview.length >= 300) {
-          this.movies[i].overview = movie.overview.substr(0, 300) + "...";
-        }
-        //If title length to big, reduce it
-        if (movie.title.length >= 32) {
-          this.movies[i].title = movie.title.substr(0, 32) + "...";
-        }
-      });
-    });
+    console.log(1);
+    console.log(query);
+    await this.$store.dispatch("getMoviesAdvancedSearch", query);
+    this.movies = this.$store.state.catalogMovies;
+    this.totalPages = this.$store.state.totalPages;
   }
 
   public searchMovie(): void {

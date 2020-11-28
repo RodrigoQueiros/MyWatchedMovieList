@@ -23,17 +23,11 @@
         <div class="details-movie-text">
           <p>
             <b>Genres:</b>
-            <span v-for="(genre,i) in movie.genres" :key="genre.id">
-              {{" " + genre.name + " "}}
-              <span v-if="(movie.genres.length - 2) >= i">-</span>
-            </span>
+            {{addLinesBetweenGenre}}
           </p>
           <p>
             <b>Producers:</b>
-            <span v-for="(prod,i) in movie.production_companies" :key="prod.id">
-              {{" " + prod.name + " "}}
-              <span v-if="(movie.production_companies.length - 2) >= i">-</span>
-            </span>
+            {{addLinesBetweenProducers}}
           </p>
           <p>
             <b>Release date:</b>
@@ -116,46 +110,13 @@
 <script lang="ts">
 // TS
 import { Component, Vue } from "vue-property-decorator";
-// Axios
-import { getMovieDetailsById, getRecommendedMovieById } from "../API/apiMovie";
-import { getMoviesByGenreId } from "../API/apiDiscover";
-
-// Movie Model
-interface movieModel {
-  overview: string;
-  title: string;
-  poster_path: string;
-  runtime: string;
-  vote_average: number;
-  id: number;
-  src: string;
-  genres: genreType[];
-}
-interface genreModel {
-  name: string;
-  id: number;
-}
-interface movieType {
-  overview: string;
-  title: string;
-  poster_path: string;
-  runtime: string;
-  vote_average: number;
-  id: number;
-  src: string;
-}
-
-interface genreType {
-  name: string;
-  id: number;
-}
-interface watchListModel {
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  watchState: string;
-  id: number;
-}
+// Models
+import {
+  WatchModel,
+  MovieModel,
+  GenreModel,
+  ProducersModel
+} from "../store/models/models";
 
 @Component({
   components: {}
@@ -163,7 +124,7 @@ interface watchListModel {
 export default class DetailsPage extends Vue {
   private movieId: string = "";
   private alreadyAdded: boolean = false;
-  private movie: movieModel = {
+  private movie: MovieModel = {
     overview: "",
     title: "",
     poster_path: "",
@@ -171,17 +132,18 @@ export default class DetailsPage extends Vue {
     vote_average: 0,
     id: 0,
     src: "",
-    genres: []
+    genres: [],
+    production_companies: []
   };
-  private randomGenre: genreModel = {
+  private randomGenre: GenreModel = {
     name: "",
     id: 0
   };
-  private recommendedMoviesbyGenre: movieType[] = [];
-  private recommendedMovies: movieType[] = [];
-  public created() {
+  private recommendedMoviesbyGenre: MovieModel[] = [];
+  private recommendedMovies: MovieModel[] = [];
+  public async created() {
     this.movieId = this.$route.params.id;
-    this.getMovie();
+    await this.getMovie();
   }
   public goToMovie(movieId: number): void {
     // Go to the details page of movie
@@ -190,99 +152,62 @@ export default class DetailsPage extends Vue {
     this.movieId = this.$route.params.id;
     this.getMovie();
   }
-  public getMovie(): void {
-    getMovieDetailsById(this.movieId).then(response => {
-      this.movie = response.data;
-      // correct the path
-      this.movie.poster_path =
-        "https://image.tmdb.org/t/p/w500" + this.movie.poster_path;
-      // Add minutes to the time
-      this.movie.runtime = this.movie.runtime + " m";
-      // Get a random genre to recommend
-      this.randomGenre = this.movie.genres[
-        Math.floor(Math.random() * this.movie.genres.length)
-      ];
-      //Button state
-      this.alreadyAdded = false;
-      let local = localStorage.getItem("watch-list");
-      if (local) {
-        let obj = JSON.parse(local);
+  public async getMovie() {
+    await this.$store.dispatch("getMovieDetailsById", this.movieId);
+    this.movie = this.$store.state.detailsMovie;
+    this.randomGenre = this.$store.state.detailsMovie.randomGenre;
 
-        obj.forEach((element: watchListModel) => {
-          if (element.id == this.movie.id) {
-            this.alreadyAdded = true;
-          }
-        });
+    //Button state
+    this.alreadyAdded = false;
+    this.$store.dispatch("getWatchList");
+    let local = this.$store.state.watchList;
 
-        getMoviesByGenreId(this.randomGenre.id.toString()).then(response => {
-          this.recommendedMoviesbyGenre = response.data.results.slice(0, 3);
-
-          this.recommendedMoviesbyGenre.forEach((genre, i) => {
-            // Correct the path
-            this.recommendedMoviesbyGenre[i].poster_path =
-              "https://image.tmdb.org/t/p/w500" + genre.poster_path;
-            // Limit the number of chars in the title
-            if (genre.title.length >= 32) {
-              this.recommendedMoviesbyGenre[i].title =
-                genre.title.substr(0, 32) + "...";
-            }
-          });
-        });
-      }
-    });
-
-    getRecommendedMovieById(this.movieId).then(response => {
-      this.recommendedMovies = response.data.results.slice(0, 3);
-
-      this.recommendedMovies.forEach((movie, i) => {
-        // Correct the path
-        this.recommendedMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
-        // Limit the number of chars in the title
-        if (movie.title.length >= 32) {
-          this.recommendedMovies[i].title = movie.title.substr(0, 32) + "...";
+    if (local) {
+      local.forEach((element: WatchModel) => {
+        if (element.id == this.movie.id) {
+          this.alreadyAdded = true;
         }
       });
-    });
+    }
+    // Recommended
+    await this.$store.dispatch(
+      "getMoviesByGenreId",
+      this.randomGenre.id.toString()
+    );
+    this.recommendedMoviesbyGenre = this.$store.state.recommendedMoviesbyGenre;
+
+    await this.$store.dispatch("getRecommendedMovieById", this.movieId);
+    this.recommendedMovies = this.$store.state.recommendedMovies;
   }
 
   public addToList(): void {
-    let tempMovie = {
-      title: this.movie.title,
-      poster_path: this.movie.poster_path,
-      vote_average: this.movie.vote_average,
-      id: this.movie.id,
-      watchState: "completed"
-    };
-
-    let local = localStorage.getItem("watch-list");
-    if (local) {
-      let obj = JSON.parse(local);
-      obj.push(tempMovie);
-      localStorage.setItem("watch-list", JSON.stringify(obj));
-    } else {
-      let temp = [];
-      temp.push(tempMovie);
-      localStorage.setItem("watch-list", JSON.stringify(temp));
-    }
+    this.$store.dispatch("addToList", this.movie);
     this.alreadyAdded = true;
   }
 
   public removeFromList(): void {
-    let local = localStorage.getItem("watch-list");
-    if (local) {
-      let obj = JSON.parse(local);
-      console.log(obj);
-
-      obj.forEach((element: watchListModel, i: number) => {
-        if (element.id == this.movie.id) {
-          obj.splice(i, 1);
-        }
-        this.alreadyAdded = false;
-      });
-
-      localStorage.setItem("watch-list", JSON.stringify(obj));
-    }
+    this.$store.dispatch("removeFromList", this.movie);
+    this.alreadyAdded = false;
+  }
+  get addLinesBetweenGenre(): string {
+    let phrase = " ";
+    this.movie.genres.forEach((element, i: number) => {
+      phrase += element.name + " ";
+      if (this.movie.genres.length - 2 >= i) {
+        phrase += "- ";
+      }
+    });
+    return phrase;
+  }
+  get addLinesBetweenProducers(): string {
+    let phrase = " ";
+    this.movie.production_companies.forEach((element, i: number) => {
+      phrase += element.name + " ";
+      if (this.movie.production_companies.length - 2 >= i) {
+        phrase += "- ";
+      }
+    });
+    return phrase;
   }
 }
 </script>

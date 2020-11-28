@@ -10,7 +10,8 @@ import {
   get,
   correctPosterPath,
   reduceOverviewLength,
-  addMinutesToTime
+  addMinutesToTime,
+  reduceTitleLength
 } from "../utils/utils";
 
 Vue.use(Vuex);
@@ -18,6 +19,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // Home page
+    popularMovies: Array<MovieModel>(),
+    topMovies: Array<MovieModel>(),
+    upcomingMovies: Array<MovieModel>(),
     bannerIds: [
       {
         id: "337401",
@@ -30,6 +34,13 @@ export default new Vuex.Store({
       }
     ],
     bannerMovies: Array<MovieModel>(),
+    //CatalogMovies
+    catalogMovies: Array<MovieModel>(),
+    totalPages: 0,
+    // Details page
+    detailsMovie: {},
+    recommendedMoviesbyGenre: Array<MovieModel>(),
+    recommendedMovies: Array<MovieModel>(),
     // Watch list
     watchList: Array<WatchModel>(),
     // Random Movie
@@ -118,26 +129,85 @@ export default new Vuex.Store({
   mutations: {
     // Home
     GET_BANNERMOVIES(state, response) {
-      console.log(response);
+      console.log("mutation");
+      state.bannerMovies = response;
+    },
+    GET_POPULARMOVIES(state, response) {
       response.map((movie: MovieModel) => {
-        movie.poster_path = correctPosterPath(response.poster_path);
-        console.log(2);
-        console.log(movie.poster_path);
-        movie.overview = reduceOverviewLength(response.overview);
-        movie.runtime = addMinutesToTime(response.runtime);
+        movie.poster_path = correctPosterPath(movie.poster_path);
+        movie.title = reduceTitleLength(movie.title);
+      });
+      state.popularMovies = response;
+    },
+    GET_TOPMOVIES(state, response) {
+      response.map((movie: MovieModel) => {
+        movie.poster_path = correctPosterPath(movie.poster_path);
+        movie.title = reduceTitleLength(movie.title);
+      });
+      state.topMovies = response;
+    },
+    GET_UPCOMINGMOVIES(state, response) {
+      response.map((movie: MovieModel) => {
+        movie.poster_path = correctPosterPath(movie.poster_path);
+        movie.title = reduceTitleLength(movie.title);
+      });
+      state.upcomingMovies = response;
+    },
+    // Catalog
+    GET_ALLGENRES(state, response) {
+      state.genres = response;
+    },
+    GET_MOVIESBYNAME(state, response) {
+      response.results.forEach((movie: MovieModel) => {
+        movie.poster_path = correctPosterPath(movie.poster_path);
+        movie.title = reduceTitleLength(movie.title);
+        movie.overview = reduceOverviewLength(movie.overview);
+      });
+      state.totalPages = response.total_pages;
+      state.catalogMovies = response.results;
+    },
+    GET_MOVIESADVANCEDSEARCH(state, response) {
+      console.log(3);
+      console.log(response);
+      response.results.forEach((movie: MovieModel) => {
+        console.log(4);
+        movie.poster_path = correctPosterPath(movie.poster_path);
+        movie.title = reduceTitleLength(movie.title);
+        movie.overview = reduceOverviewLength(movie.overview);
+      });
+      console.log(5);
+      console.log(response);
+      state.totalPages = response.total_pages;
+      state.catalogMovies = response.results;
+    },
+
+    // Details page
+    GET_MOVIEDETAILSBYID(state, response) {
+      state.detailsMovie = response;
+    },
+    GET_MOVIESBYGENREID(state, response) {
+      response.map((genre: MovieModel) => {
+        genre.poster_path = correctPosterPath(genre.poster_path);
+        genre.title = reduceTitleLength(genre.title);
       });
 
-      state.bannerMovies = response;
-      console.log(3);
-      console.log(state.bannerMovies);
+      state.recommendedMoviesbyGenre = response;
+    },
+    GET_RECOMMENDEDMOVIEBYID(state, response) {
+      response.map((movie: MovieModel) => {
+        movie.poster_path = correctPosterPath(movie.poster_path);
+        movie.title = reduceTitleLength(movie.title);
+      });
+
+      state.recommendedMovies = response;
     },
     // Categories
     GET_CATEGORIES(state, response) {
-      response.data.genres.forEach((genre: CategoriesModel, i: number) => {
+      response.forEach((genre: CategoriesModel, i: number) => {
         genre.img = state.categoriesImages[i].name;
         genre.color = state.categoriesImages[i].color;
-        state.genres.push(genre);
       });
+      state.genres = response;
     },
     // RandomMovie
     GET_RANDOMMOVIE(state, response) {
@@ -147,20 +217,26 @@ export default new Vuex.Store({
         response.data.results[num2].poster_path
       );
       state.randomMovie = response.data.results[num2];
-      console.log(state.randomMovie);
     },
 
     // Watch list
     GET_WATCHLIST(state, response) {
+      state.watchList = response;
+    },
+    ADD_TOLIST(state, response) {
+      localStorage.setItem("watch-list", JSON.stringify(response));
+      state.watchList = response;
+    },
+    REMOVE_FROMLIST(state, response) {
+      localStorage.setItem("watch-list", JSON.stringify(response));
       state.watchList = response;
     }
   },
   actions: {
     // Home
     async getBannerMovies({ commit, state }) {
-      console.log(state.bannerIds);
       let tempVar: MovieModel[] = [];
-      state.bannerIds.forEach(async (movie: BannerModel) => {
+      await state.bannerIds.forEach(async (movie: BannerModel, i: number) => {
         await get(
           "/movie/" +
             movie.id +
@@ -169,12 +245,120 @@ export default new Vuex.Store({
             "&language=en-US"
         ).then(result => {
           result.data.src = movie.path;
+          result.data.poster_path = correctPosterPath(result.data.poster_path);
+          result.data.overview = reduceOverviewLength(result.data.overview);
+          result.data.runtime = addMinutesToTime(result.data.runtime);
           tempVar.push(result.data);
+          if (i + 1 == state.bannerIds.length) {
+            commit("GET_BANNERMOVIES", tempVar);
+          }
         });
       });
-      console.log(1);
-      console.log(tempVar);
-      commit("GET_BANNERMOVIES", tempVar);
+    },
+    async getPopularMovies({ commit }) {
+      await get(
+        "/movie/popular" +
+          "?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US&page=1"
+      ).then(result => {
+        result = result.data.results.slice(0, 10);
+        commit("GET_POPULARMOVIES", result);
+      });
+    },
+    async getTopMovies({ commit }) {
+      await get(
+        "/movie/top_rated" +
+          "?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US&page=1"
+      ).then(result => {
+        result = result.data.results.slice(0, 10);
+        commit("GET_TOPMOVIES", result);
+      });
+    },
+    async getUpcomingMovies({ commit }) {
+      await get(
+        "/movie/upcoming" +
+          "?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US&page=1"
+      ).then(result => {
+        result = result.data.results.slice(0, 10);
+        commit("GET_UPCOMINGMOVIES", result);
+      });
+    },
+    // Catalog
+    async getMoviesAdvancedSearch({ commit }, filters) {
+      await get(
+        "/discover/movie?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1" +
+          filters
+      ).then(result => {
+        console.log(2);
+        console.log(result);
+        commit("GET_MOVIESADVANCEDSEARCH", result.data);
+      });
+    },
+    async getMoviesByName({ commit }, name) {
+      await get(
+        "/search/movie?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US&include_adult=false" +
+          name
+      ).then(result => {
+        commit("GET_MOVIESBYNAME", result.data);
+      });
+    },
+    async getAllGenres({ commit }) {
+      await get(
+        "/genre/movie/list?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US"
+      ).then(result => {
+        commit("GET_ALLGENRES", result.data.genres);
+      });
+    },
+    // Details page
+    async getMovieDetailsById({ commit }, id: string) {
+      console.log(id);
+      await get(
+        "/movie/" +
+          id +
+          "?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US"
+      ).then(result => {
+        result.data.poster_path = correctPosterPath(result.data.poster_path);
+        result.data.runtime = addMinutesToTime(result.data.runtime);
+        result.data.randomGenre =
+          result.data.genres[
+            Math.floor(Math.random() * result.data.genres.length)
+          ];
+        commit("GET_MOVIEDETAILSBYID", result.data);
+      });
+    },
+    async getMoviesByGenreId({ commit }, id: string) {
+      await get(
+        "/discover/movie?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=" +
+          id
+      ).then(result => {
+        commit("GET_MOVIESBYGENREID", result.data.results.slice(0, 3));
+      });
+    },
+    async getRecommendedMovieById({ commit }, id: string) {
+      await get(
+        "/movie/" +
+          id +
+          "/recommendations?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US"
+      ).then(result => {
+        commit("GET_RECOMMENDEDMOVIEBYID", result.data.results.slice(0, 3));
+      });
     },
     // Categories
     async getCategories({ commit }) {
@@ -183,7 +367,7 @@ export default new Vuex.Store({
           process.env.VUE_APP_API_KEY +
           "&language=en-US"
       ).then(result => {
-        commit("GET_CATEGORIES", result);
+        commit("GET_CATEGORIES", result.data.genres);
       });
     },
     // Random movie
@@ -209,6 +393,39 @@ export default new Vuex.Store({
         commit("GET_WATCHLIST", tempVar);
       } else {
         commit("GET_WATCHLIST", []);
+      }
+    },
+    addToList({ commit }, movie) {
+      let tempMovie: WatchModel = {
+        title: movie.title,
+        poster_path: movie.poster_path,
+        vote_average: movie.vote_average,
+        id: movie.id,
+        watchState: "completed"
+      };
+
+      let local = localStorage.getItem("watch-list");
+      if (local) {
+        let obj = JSON.parse(local);
+        obj.push(tempMovie);
+        commit("ADD_TOLIST", obj);
+      } else {
+        let temp = [];
+        temp.push(tempMovie);
+        commit("ADD_TOLIST", temp);
+      }
+    },
+    removeFromList({ commit }, movie) {
+      let local = localStorage.getItem("watch-list");
+      if (local) {
+        let obj = JSON.parse(local);
+
+        obj.forEach((element: WatchModel, i: number) => {
+          if (element.id == movie.id) {
+            obj.splice(i, 1);
+          }
+        });
+        commit("REMOVE_FROMLIST", obj);
       }
     }
   },

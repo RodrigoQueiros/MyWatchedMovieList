@@ -71,29 +71,12 @@
 </template>
 
 <script lang="ts">
-// Axios
-import {
-  getMovieDetailsById,
-  getPopularMovies,
-  getTopMovies,
-  getUpcomingMovies
-} from "../API/apiMovie";
 // TS
 import { Component, Vue } from "vue-property-decorator";
 // Mixin
 import GoToMovie from "../components/mixins/goToMovie";
 // Component
 import Card from "../components/Card.vue";
-
-interface movieType {
-  overview: string;
-  title: string;
-  poster_path: string;
-  runtime: string;
-  vote_average: number;
-  id: number;
-  src: string;
-}
 
 @Component({
   components: {
@@ -104,58 +87,31 @@ interface movieType {
 export default class Home extends Vue {
   private pauseInterval: boolean = false;
   private movieTrendingShow: number = 0;
-  private movieTrending = [];
-  private popularMovies: movieType[] = [];
-  private topMovies: movieType[] = [];
-  private upcomingMovies: movieType[] = [];
+  private movieTrending = this.$store.state.bannerMovies;
+  private popularMovies = [];
+  private topMovies = [];
+  private upcomingMovies = [];
   private sortingSelected: string = "mostPopular";
   // Css class
   private currentSorting: string = "current-sorting";
 
   public async created() {
-    // Get movies for hero trending
+    // Get banner movies
     await this.$store.dispatch("getBannerMovies");
     this.movieTrending = this.$store.state.bannerMovies;
+    console.log(this.movieTrending);
 
     // Get popular movies
-    getPopularMovies().then(response => {
-      this.popularMovies = response.data.results.slice(0, 10);
+    await this.$store.dispatch("getPopularMovies");
+    this.popularMovies = this.$store.state.popularMovies;
+    // Get top movies
+    await this.$store.dispatch("getTopMovies");
+    this.topMovies = this.$store.state.topMovies;
 
-      this.popularMovies.forEach((movie, i) => {
-        // Correct the path
-        this.popularMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
-        // Limit the number of chars in the title
-        if (movie.title.length >= 32) {
-          this.popularMovies[i].title = movie.title.substr(0, 32) + "...";
-        }
-      });
-    });
+    // Get upcoming movies
+    await this.$store.dispatch("getUpcomingMovies");
+    this.upcomingMovies = this.$store.state.upcomingMovies;
 
-    getTopMovies().then(response => {
-      this.topMovies = response.data.results.slice(0, 10);
-
-      this.topMovies.forEach((movie, i) => {
-        this.topMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
-        if (movie.title.length >= 32) {
-          this.topMovies[i].title = movie.title.substr(0, 32) + "...";
-        }
-      });
-    });
-
-    getUpcomingMovies().then(response => {
-      this.upcomingMovies = response.data.results.slice(0, 10);
-
-      this.upcomingMovies.forEach((movie, i) => {
-        this.upcomingMovies[i].poster_path =
-          "https://image.tmdb.org/t/p/w500" + movie.poster_path;
-
-        if (movie.title.length >= 32) {
-          this.upcomingMovies[i].title = movie.title.substr(0, 32) + "...";
-        }
-      });
-    });
     // Change hero movie each 5s
     setInterval(() => {
       // Possible to pause it on hover

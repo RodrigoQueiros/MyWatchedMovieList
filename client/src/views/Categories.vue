@@ -37,6 +37,7 @@ export default class CategoriesPage extends Vue {
 
   public async created() {
     await this.$store.dispatch("getCategories");
+    this.genres = this.$store.state.genres;
   }
 }
 </script>

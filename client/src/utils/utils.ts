@@ -13,6 +13,13 @@ export function reduceOverviewLength(overview: string) {
   } else return overview;
 }
 
+// Reduce title length
+export function reduceTitleLength(title: string) {
+  if (title.length >= 32) {
+    return title.substr(0, 32) + "...";
+  } else return title;
+}
+
 // Add minutes to time
 export function addMinutesToTime(runtime: string) {
   return runtime + " m";

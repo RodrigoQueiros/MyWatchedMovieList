@@ -7,6 +7,15 @@ export interface MovieModel {
   vote_average: number;
   id: number;
   src: string;
+  genres: GenreModel[];
+  production_companies: ProducersModel[];
+}
+export interface GenreModel {
+  name: string;
+  id: number;
+}
+export interface ProducersModel {
+  name: string;
 }
 
 export interface BannerModel {
