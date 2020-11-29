@@ -7,7 +7,7 @@
           <h2 class="catalog-title">Advanced Search</h2>
           <div class="catalog-search">
             <!-- Search by name -->
-            <form class="search-by-name-input">
+            <div class="search-by-name-input">
               <label for="search-by-name" class="search-label">Search for movie name</label>
               <input
                 class="search-input"
@@ -21,8 +21,8 @@
               <div class="flex">
                 <button class="button-search" @click="getMoviesByName()">Search</button>
               </div>
-            </form>
-            <form>
+            </div>
+            <div>
               <!-- Sort by -->
               <div class="search-sorting">
                 <label for="search-sorting-input" class="search-label">Sort by</label>
@@ -72,7 +72,7 @@
               <div class="flex">
                 <button class="button-search" @click="searchMovie()">Search</button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
