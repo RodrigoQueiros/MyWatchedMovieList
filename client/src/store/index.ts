@@ -129,8 +129,7 @@ export default new Vuex.Store({
   mutations: {
     // Home
     GET_BANNERMOVIES(state, response) {
-      console.log("mutation");
-      state.bannerMovies = response;
+      state.bannerMovies.push(response);
     },
     GET_POPULARMOVIES(state, response) {
       response.map((movie: MovieModel) => {
@@ -167,16 +166,12 @@ export default new Vuex.Store({
       state.catalogMovies = response.results;
     },
     GET_MOVIESADVANCEDSEARCH(state, response) {
-      console.log(3);
-      console.log(response);
       response.results.forEach((movie: MovieModel) => {
-        console.log(4);
         movie.poster_path = correctPosterPath(movie.poster_path);
         movie.title = reduceTitleLength(movie.title);
         movie.overview = reduceOverviewLength(movie.overview);
       });
-      console.log(5);
-      console.log(response);
+
       state.totalPages = response.total_pages;
       state.catalogMovies = response.results;
     },
@@ -203,9 +198,12 @@ export default new Vuex.Store({
     },
     // Categories
     GET_CATEGORIES(state, response) {
+      console.log(response);
       response.forEach((genre: CategoriesModel, i: number) => {
+        console.log(state.categoriesImages[i]);
         genre.img = state.categoriesImages[i].name;
         genre.color = state.categoriesImages[i].color;
+        console.log(genre);
       });
       state.genres = response;
     },
@@ -234,25 +232,19 @@ export default new Vuex.Store({
   },
   actions: {
     // Home
-    async getBannerMovies({ commit, state }) {
-      let tempVar: MovieModel[] = [];
-      await state.bannerIds.forEach(async (movie: BannerModel, i: number) => {
-        await get(
-          "/movie/" +
-            movie.id +
-            "?api_key=" +
-            process.env.VUE_APP_API_KEY +
-            "&language=en-US"
-        ).then(result => {
-          result.data.src = movie.path;
-          result.data.poster_path = correctPosterPath(result.data.poster_path);
-          result.data.overview = reduceOverviewLength(result.data.overview);
-          result.data.runtime = addMinutesToTime(result.data.runtime);
-          tempVar.push(result.data);
-          if (i + 1 == state.bannerIds.length) {
-            commit("GET_BANNERMOVIES", tempVar);
-          }
-        });
+    async getBannerMovies({ commit, state }, pos) {
+      await get(
+        "/movie/" +
+          state.bannerIds[pos].id +
+          "?api_key=" +
+          process.env.VUE_APP_API_KEY +
+          "&language=en-US"
+      ).then(result => {
+        result.data.src = state.bannerIds[pos].path;
+        result.data.poster_path = correctPosterPath(result.data.poster_path);
+        result.data.overview = reduceOverviewLength(result.data.overview);
+        result.data.runtime = addMinutesToTime(result.data.runtime);
+        commit("GET_BANNERMOVIES", result.data);
       });
     },
     async getPopularMovies({ commit }) {
@@ -296,8 +288,6 @@ export default new Vuex.Store({
           "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1" +
           filters
       ).then(result => {
-        console.log(2);
-        console.log(result);
         commit("GET_MOVIESADVANCEDSEARCH", result.data);
       });
     },
@@ -322,7 +312,6 @@ export default new Vuex.Store({
     },
     // Details page
     async getMovieDetailsById({ commit }, id: string) {
-      console.log(id);
       await get(
         "/movie/" +
           id +

@@ -5,18 +5,11 @@
       <!-- Categories card -->
       <div
         class="categories-space"
-        v-for="genre in genres"
-        :key="genre.id"
+        v-for="(genre,i) in genres"
+        :key="`${i}-${genre.id}`"
         @click="goToGenre(genre.id)"
       >
-        <div class="categories-gradient" :style="{ color: genre.color}">
-          <img
-            v-bind:src="require('../assets/categories/' + genre.img)"
-            alt="descriptive image of the category"
-            class="categories-card-img"
-          />
-          <p class="categories-text">{{genre.name}}</p>
-        </div>
+        <CategoriesCard :genre="genre" />
       </div>
     </div>
   </div>
@@ -27,9 +20,12 @@
 import { Component, Vue } from "vue-property-decorator";
 // Mixin
 import GoToGenre from "../components/mixins/goToGenre";
+import CategoriesCard from "../components/CategoriesCard.vue";
 
 @Component({
-  components: {},
+  components: {
+    CategoriesCard
+  },
   mixins: [GoToGenre]
 })
 export default class CategoriesPage extends Vue {

@@ -23,30 +23,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import GoToMovie from "../components/mixins/goToMovie";
-
-interface movieModel {
-  overview: string;
-  title: string;
-  poster_path: string;
-  runtime: string;
-  vote_average: number;
-  id: number;
-  src: string;
-}
-
-interface watchListModel {
-  title: string;
-  poster_path: string;
-  vote_average: number;
-  watchState: string;
-  id: number;
-}
+// Models
+import { WatchModel, MovieModel } from "../store/models/models";
 
 @Component({
   mixins: [GoToMovie]
 })
 export default class Card extends Vue {
-  @Prop({ required: true }) readonly movie: movieModel;
+  @Prop({ required: true }) readonly movie: MovieModel;
   private alreadyAdded: boolean = false;
 
   public created() {
@@ -56,7 +40,7 @@ export default class Card extends Vue {
 
       //This foreach was giving me problems with the type of variables not being identified
       //after trying different methods, this was the first one that worked
-      obj.forEach((element: watchListModel, i: number) => {
+      obj.forEach((element: WatchModel, i: number) => {
         if (element.id == this.movie.id) {
           this.alreadyAdded = true;
         }
@@ -65,42 +49,13 @@ export default class Card extends Vue {
   }
 
   public addToList(): void {
-    let tempMovie = {
-      title: this.movie.title,
-      poster_path: this.movie.poster_path,
-      vote_average: this.movie.vote_average,
-      id: this.movie.id,
-      watchState: "completed"
-    };
-
-    let local = localStorage.getItem("watch-list");
-    if (local) {
-      let obj = JSON.parse(local);
-      obj.push(tempMovie);
-      localStorage.setItem("watch-list", JSON.stringify(obj));
-    } else {
-      let temp = [];
-      temp.push(tempMovie);
-      localStorage.setItem("watch-list", JSON.stringify(temp));
-    }
+    this.$store.dispatch("addToList", this.movie);
     this.alreadyAdded = true;
   }
 
   public removeFromList(): void {
-    let local = localStorage.getItem("watch-list");
-    if (local) {
-      let obj = JSON.parse(local);
-
-      console.log(obj);
-
-      obj.forEach((element: watchListModel, i: number) => {
-        if (element.id == this.movie.id) {
-          obj.splice(i, 1);
-        }
-        this.alreadyAdded = false;
-      });
-      localStorage.setItem("watch-list", JSON.stringify(obj));
-    }
+    this.$store.dispatch("removeFromList", this.movie);
+    this.alreadyAdded = false;
   }
 }
 </script>

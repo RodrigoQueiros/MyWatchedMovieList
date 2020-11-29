@@ -82,31 +82,14 @@
             <h2 class="catalog-title">Catalogue</h2>
           </div>
           <!-- Pagination top -->
-          <div class="catalog-pagination-line">
-            <div>
-              <i
-                @click="goToPrevious()"
-                class="fas fa-arrow-alt-circle-left pagination-icon"
-                :style="currentPage==1?{ color: 'grey' }:''"
-              ></i>
-            </div>
-            <div class="pagination-flex">
-              <input
-                class="paginatin-input"
-                type="text"
-                v-model="currentPage"
-                v-on:keyup.enter="goToPage()"
-              />
-              <p class="pagination-text">/{{totalPages}}</p>
-            </div>
-            <div>
-              <i
-                @click="goToNext()"
-                class="fas fa-arrow-alt-circle-right pagination-icon"
-                :style="currentPage==totalPages?{ color: 'grey' }:''"
-              ></i>
-            </div>
-          </div>
+          <Pagination
+            :currentPage="currentPage"
+            :totalPages="totalPages"
+            @previous="goToPrevious"
+            @go-to="goToPage"
+            @next="goToNext"
+          />
+
           <!-- View change -->
           <div class="catalog-views">
             <p class="catalog-views-text">views</p>
@@ -128,25 +111,8 @@
         </div>
         <!-- View 0 cards type 1 -->
         <div class="catlog-cards1" v-if="viewSelected == 0">
-          <div
-            class="catalog-card1"
-            v-for="movie in movies"
-            :key="movie.id"
-            @click="goToMovie(movie.id)"
-          >
-            <div class="catalog-card1-img-space">
-              <img :src="movie.poster_path" alt="Movie Poster" />
-            </div>
-            <div class="catalog-card1-info-space">
-              <div>
-                <h2>{{movie.title}}</h2>
-                <p class="catalog-card1-info-text">
-                  <b>Overview:</b>
-                  {{movie.overview}}
-                </p>
-              </div>
-              <button class="button-card card1">Add to list</button>
-            </div>
+          <div v-for="movie in movies" :key="movie.id" @click="goToMovie(movie.id)">
+            <Card2 :movie="movie" />
           </div>
         </div>
         <!-- View 1 cards type 2 -->
@@ -156,31 +122,13 @@
           </div>
         </div>
         <!-- Pagination bottom -->
-        <div class="catalog-pagination-line">
-          <div>
-            <i
-              @click="goToPrevious()"
-              class="fas fa-arrow-alt-circle-left pagination-icon"
-              :style="currentPage==1?{ color: 'grey' }:''"
-            ></i>
-          </div>
-          <div class="pagination-flex">
-            <input
-              class="paginatin-input"
-              type="text"
-              v-model="currentPage"
-              v-on:keyup.enter="goToPage()"
-            />
-            <p class="pagination-text">/{{totalPages}}</p>
-          </div>
-          <div>
-            <i
-              @click="goToNext()"
-              class="fas fa-arrow-alt-circle-right pagination-icon"
-              :style="currentPage==totalPages?{ color: 'grey' }:''"
-            ></i>
-          </div>
-        </div>
+        <Pagination
+          :currentPage="currentPage"
+          :totalPages="totalPages"
+          @previous="goToPrevious"
+          @go-to="goToPage"
+          @next="goToNext"
+        />
       </div>
     </div>
   </div>
@@ -193,11 +141,15 @@ import { Component, Vue } from "vue-property-decorator";
 import GoToMovie from "../components/mixins/goToMovie";
 // Component
 import Card from "../components/Card.vue";
+import Card2 from "../components/Card2.vue";
+import Pagination from "../components/Pagination.vue";
 import { MovieModel, GenreModel } from "../store/models/models";
 
 @Component({
   components: {
-    Card
+    Card,
+    Card2,
+    Pagination
   },
   mixins: [GoToMovie]
 })
@@ -245,16 +197,16 @@ export default class Catalog extends Vue {
     this.searchSelected = 1;
 
     //Api request
-    const query = "&query=" + this.nameSearch + "&page=" + this.currentPage;
+    const filter = "&query=" + this.nameSearch + "&page=" + this.currentPage;
 
-    await this.$store.dispatch("getMoviesByName", query);
+    await this.$store.dispatch("getMoviesByName", filter);
     this.movies = this.$store.state.catalogMovies;
     this.totalPages = this.$store.state.totalPages;
   }
 
   public async getMovies() {
     // Query and verifications
-    let query =
+    let filter =
       "&sort_by=" +
       this.sortSelected +
       "&page=" +
@@ -262,18 +214,17 @@ export default class Catalog extends Vue {
       "&vote_count.gte=100";
 
     if (this.genreSelected != "") {
-      query = query + "&with_genres=" + this.genreSelected;
+      filter = filter + "&with_genres=" + this.genreSelected;
     }
     if (
       this.yearInput != "" &&
       parseInt(this.yearInput) <= 2020 &&
       parseInt(this.yearInput) >= 1990
     ) {
-      query = query + "&primary_release_year=" + this.yearInput;
+      filter = filter + "&primary_release_year=" + this.yearInput;
     }
-    console.log(1);
-    console.log(query);
-    await this.$store.dispatch("getMoviesAdvancedSearch", query);
+
+    await this.$store.dispatch("getMoviesAdvancedSearch", filter);
     this.movies = this.$store.state.catalogMovies;
     this.totalPages = this.$store.state.totalPages;
   }
@@ -307,7 +258,8 @@ export default class Catalog extends Vue {
     }
   }
   // If type page number
-  public goToPage(): void {
+  public goToPage(page: string): void {
+    this.currentPage = parseInt(page);
     if (this.currentPage >= 1 && this.currentPage <= this.totalPages) {
       if (this.searchSelected == 0) {
         this.getMovies();

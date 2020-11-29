@@ -5,7 +5,7 @@
     <div
       class="hero"
       v-for="(movie,i) in movieTrending"
-      :key="movie.id"
+      :key="`${i}-${movie.id}`"
       v-show="movieTrendingShow==i"
       @click="goToMovie(movie.id)"
       @mouseover="pauseInterval = true"
@@ -52,21 +52,9 @@
       >Upcoming</h3>
     </div>
     <!-- Cards -->
-    <div class="movie-cards" v-if="sortingSelected == 'mostPopular'">
-      <div class="movie-card" v-for="movie in popularMovies" :key="movie.id">
-        <Card :movie="movie" />
-      </div>
-    </div>
-    <div class="movie-cards" v-if="sortingSelected == 'topRated'">
-      <div class="movie-card" v-for="movie in topMovies" :key="movie.id">
-        <Card :movie="movie" />
-      </div>
-    </div>
-    <div class="movie-cards" v-if="sortingSelected == 'upcoming'">
-      <div class="movie-card" v-for="movie in upcomingMovies" :key="movie.id">
-        <Card :movie="movie" />
-      </div>
-    </div>
+    <HomeCards :movies="popularMovies" v-if="sortingSelected == 'mostPopular'" />
+    <HomeCards :movies="topMovies" v-if="sortingSelected == 'topRated'" />
+    <HomeCards :movies="upcomingMovies" v-if="sortingSelected == 'upcoming'" />
   </div>
 </template>
 
@@ -76,18 +64,18 @@ import { Component, Vue } from "vue-property-decorator";
 // Mixin
 import GoToMovie from "../components/mixins/goToMovie";
 // Component
-import Card from "../components/Card.vue";
+import HomeCards from "../components/HomeCards.vue";
 
 @Component({
   components: {
-    Card
+    HomeCards
   },
   mixins: [GoToMovie]
 })
 export default class Home extends Vue {
   private pauseInterval: boolean = false;
   private movieTrendingShow: number = 0;
-  private movieTrending = this.$store.state.bannerMovies;
+  private movieTrending = [];
   private popularMovies = [];
   private topMovies = [];
   private upcomingMovies = [];
@@ -97,7 +85,9 @@ export default class Home extends Vue {
 
   public async created() {
     // Get banner movies
-    await this.$store.dispatch("getBannerMovies");
+    await this.$store.dispatch("getBannerMovies", 0);
+    this.movieTrending = this.$store.state.bannerMovies;
+    await this.$store.dispatch("getBannerMovies", 1);
     this.movieTrending = this.$store.state.bannerMovies;
     console.log(this.movieTrending);
 
