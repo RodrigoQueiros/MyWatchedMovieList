@@ -30,7 +30,7 @@ Similar to TV Time, MyAnimeList, among others, MyWatchedMovieList is a applicati
 
 ## Try it
 
-rodrigoqueiros.github.io/MyWatchedMovieList-Server
+https://rodrigoqueiros.github.io/MyWatchedMovieList-Server
 
 ## Project setup
 
