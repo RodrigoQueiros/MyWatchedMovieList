@@ -1,5 +1,5 @@
 # MyWatchedMovieList
-![WatchList Logo ](client/src/assets/logo.png | width=100)
+![WatchList Logo ](client/src/assets/logo.png)
 
 Similar to TV Time, MyAnimeList, among others, MyWatchedMovieList is a application that allows you to discover movies, see more information about them and add them to you watch list if watched.
 
