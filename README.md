@@ -36,7 +36,7 @@ https://rodrigoqueiros.github.io/MyWatchedMovieList-Server
 
 ### Git clone
 ```
-git clone https://github.com/RodrigoQueiros/Owl---PW1-Project.git
+git clone https://github.com/RodrigoQueiros/MyWatchedMovieList.git
 ```
 
 ### NPM
